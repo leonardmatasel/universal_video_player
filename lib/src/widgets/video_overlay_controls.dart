@@ -6,7 +6,7 @@ import 'package:universal_video_player/src/widgets/bottom_control_bar/gradient_b
 import 'package:universal_video_player/src/widgets/bottom_control_bar/video_playback_control_bar.dart';
 import 'package:universal_video_player/universal_video_player/controllers/universal_playback_controller.dart';
 import 'package:universal_video_player/universal_video_player/models/video_player_callbacks.dart';
-import 'package:universal_video_player/universal_video_player/models/video_player_options.dart';
+import 'package:universal_video_player/universal_video_player/models/video_player_configuration.dart';
 
 /// A widget that overlays video playback controls on top of a video display.
 ///
@@ -47,7 +47,7 @@ class VideoOverlayControls extends StatelessWidget {
 
   final UniversalPlaybackController controller;
   final Widget child;
-  final VideoPlayerOptions options;
+  final VideoPlayerConfiguration options;
   final VideoPlayerCallbacks callbacks;
   final EdgeInsets playerBarPadding;
 
@@ -68,7 +68,7 @@ class VideoOverlayControls extends StatelessWidget {
           builder: (context, areControlsVisible, toggleVisibility) {
             bool areOverlayControlsVisible =
                 (controller.isPlaying || controller.isSeeking) &&
-                options.uiOptions.showVideoBottomControlsBar &&
+                options.playerUIVisibilityOptions.showVideoBottomControlsBar &&
                 areControlsVisible;
 
             bool isVisibleButton =
@@ -76,7 +76,8 @@ class VideoOverlayControls extends StatelessWidget {
                 !controller.isBuffering &&
                 !controller.isSeeking &&
                 controller.isReady &&
-                !(controller.isFinished && !options.uiOptions.showReplayButton);
+                !(controller.isFinished &&
+                    !options.playerUIVisibilityOptions.showReplayButton);
 
             callbacks.onCenterControlsVisibilityChanged?.call(isVisibleButton);
             callbacks.onOverlayControlsVisibilityChanged?.call(
@@ -99,11 +100,15 @@ class VideoOverlayControls extends StatelessWidget {
                     isVisible: areOverlayControlsVisible,
                     padding: playerBarPadding,
                     useSafeAreaForBottomControls:
-                        options.uiOptions.useSafeAreaForBottomControls,
+                        options
+                            .playerUIVisibilityOptions
+                            .useSafeAreaForBottomControls,
                     showGradientBottomControl:
-                        options.uiOptions.showGradientBottomControl,
+                        options
+                            .playerUIVisibilityOptions
+                            .showGradientBottomControl,
                     child:
-                        options.customWidgets.bottomControlsBar ??
+                        options.customPlayerWidgets.bottomControlsBar ??
                         VideoPlaybackControlBar(
                           controller: controller,
                           options: options,

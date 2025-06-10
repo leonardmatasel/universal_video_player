@@ -1,32 +1,37 @@
 import 'package:flutter/material.dart';
 
+/// Configuration options to control the visibility of various UI components
+/// in the video player interface.
+///
+/// Use these options to customize which parts of the player UI are shown or hidden,
+/// enabling a tailored user experience.
 @immutable
-class VideoPlayerUIOptions {
+class PlayerUIVisibilityOptions {
   /// Whether to display the seek bar.
   final bool showSeekBar;
 
-  /// Whether to show the current time of playback.
+  /// Whether to show the current playback time.
   final bool showCurrentTime;
 
-  /// Whether to show the video duration.
+  /// Whether to show the total video duration.
   final bool showDurationTime;
 
   /// Whether to show the remaining playback time.
   final bool showRemainingTime;
 
-  /// Whether to show a live indicator if the video is a livestream.
+  /// Whether to show a live indicator when the video is a livestream.
   final bool showLiveIndicator;
 
   /// Whether to show the loading widget during buffering.
   final bool showLoadingWidget;
 
-  /// Whether to display the error placeholder on failure.
+  /// Whether to display an error placeholder widget if playback fails.
   final bool showErrorPlaceholder;
 
   /// Whether to show the replay button after the video ends.
   final bool showReplayButton;
 
-  /// Whether to show the thumbnail before playback starts.
+  /// Whether to show the thumbnail image before playback starts.
   final bool showThumbnailAtStart;
 
   /// Whether to display the bottom control bar.
@@ -35,19 +40,25 @@ class VideoPlayerUIOptions {
   /// Whether to show the fullscreen toggle button.
   final bool showFullScreenButton;
 
-  /// Whether to show the mute/unmute button.
+  /// Whether to show the mute/unmute toggle button.
   final bool showMuteUnMuteButton;
 
+  /// Whether to show a refresh button inside the error placeholder.
   final bool showRefreshButtonInErrorPlaceholder;
 
-  /// Whether to wrap the bottom controls bar inside a [SafeArea] to avoid
-  /// overlaps with system UI elements like gesture bars or notches.
+  /// Whether to wrap the bottom control bar inside a [SafeArea] widget
+  /// to avoid overlaps with system UI elements like gesture bars or notches.
   final bool useSafeAreaForBottomControls;
 
   /// Whether to display a gradient overlay behind the bottom control bar.
   final bool showGradientBottomControl;
 
-  const VideoPlayerUIOptions({
+  /// Creates a new instance of [PlayerUIVisibilityOptions].
+  ///
+  /// All options default to `true` except:
+  /// - [useSafeAreaForBottomControls] defaults to `false`.
+  /// - [showRefreshButtonInErrorPlaceholder] defaults to `true`.
+  const PlayerUIVisibilityOptions({
     this.showSeekBar = true,
     this.showCurrentTime = true,
     this.showDurationTime = true,
@@ -65,39 +76,41 @@ class VideoPlayerUIOptions {
     this.showRefreshButtonInErrorPlaceholder = true,
   });
 
-  /// Returns a new [VideoPlayerUIOptions] instance with specified fields overridden.
+  /// Returns a copy of this [PlayerUIVisibilityOptions] but with
+  /// the given fields replaced by the new values.
   ///
   /// Parameters:
   ///
   /// - [showSeekBar]: Whether to display the seek bar.
   ///
-  /// - [showCurrentTime]: Whether to show the current time of playback.
+  /// - [showCurrentTime]: Whether to show the current playback time.
   ///
-  /// - [showDurationTime]: Whether to show the video duration.
+  /// - [showDurationTime]: Whether to show the total video duration.
   ///
   /// - [showRemainingTime]: Whether to show the remaining playback time.
   ///
-  /// - [showLiveIndicator]: Whether to show a live indicator if the video is a livestream.
+  /// - [showLiveIndicator]: Whether to show a live indicator for livestreams.
   ///
   /// - [showLoadingWidget]: Whether to show the loading widget during buffering.
   ///
-  /// - [showErrorPlaceholder]: Whether to display the error placeholder on failure.
+  /// - [showErrorPlaceholder]: Whether to show the error placeholder on failure.
   ///
-  /// - [showReplayButton]: Whether to show the replay button after the video ends.
+  /// - [showReplayButton]: Whether to show the replay button after video ends.
   ///
   /// - [showThumbnailAtStart]: Whether to show the thumbnail before playback starts.
   ///
-  /// - [showVideoBottomControlsBar]: Whether to display the bottom control bar.
+  /// - [showVideoBottomControlsBar]: Whether to show the bottom control bar.
   ///
   /// - [showFullScreenButton]: Whether to show the fullscreen toggle button.
   ///
   /// - [showMuteUnMuteButton]: Whether to show the mute/unmute button.
   ///
-  /// - [useSafeAreaForBottomControls]: Whether to wrap the bottom controls bar inside a [SafeArea]
-  ///   to avoid overlaps with system UI elements like gesture bars or notches.
+  /// - [useSafeAreaForBottomControls]: Whether to wrap bottom controls in a [SafeArea].
   ///
-  /// - [showGradientBottomControl]: Whether to display a gradient overlay behind the bottom control bar.
-  VideoPlayerUIOptions copyWith({
+  /// - [showGradientBottomControl]: Whether to display a gradient behind the bottom controls.
+  ///
+  /// - [showRefreshButtonInErrorPlaceholder]: Whether to show a refresh button in the error placeholder.
+  PlayerUIVisibilityOptions copyWith({
     bool? showSeekBar,
     bool? showCurrentTime,
     bool? showDurationTime,
@@ -114,7 +127,7 @@ class VideoPlayerUIOptions {
     bool? showGradientBottomControl,
     bool? showRefreshButtonInErrorPlaceholder,
   }) {
-    return VideoPlayerUIOptions(
+    return PlayerUIVisibilityOptions(
       showSeekBar: showSeekBar ?? this.showSeekBar,
       showCurrentTime: showCurrentTime ?? this.showCurrentTime,
       showDurationTime: showDurationTime ?? this.showDurationTime,

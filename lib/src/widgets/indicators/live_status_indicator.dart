@@ -29,7 +29,7 @@ class LiveStatusIndicator extends StatelessWidget {
             width: 10.0,
             height: 10.0,
             decoration: BoxDecoration(
-              color: theme.liveIndicatorColor,
+              color: theme.colors.liveIndicator,
               shape: BoxShape.circle,
             ),
           ),
@@ -38,7 +38,7 @@ class LiveStatusIndicator extends StatelessWidget {
             label,
             style: Theme.of(
               context,
-            ).textTheme.labelSmall?.copyWith(color: theme.liveIndicatorColor),
+            ).textTheme.labelSmall?.copyWith(color: theme.colors.liveIndicator),
           ),
         ],
       ),

@@ -4,18 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:universal_video_player/universal_video_player.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// A default error placeholder widget for the video player.
+/// A fallback widget displayed when video playback fails.
 ///
-/// [VideoPlayerErrorPlaceholder] is shown when video playback fails due to an error.
-/// It displays a themed icon, error message, and optionally provides a button
-/// to open the video URL in an external video player app.
+/// The [VideoPlayerErrorPlaceholder] provides a user-friendly error UI that includes:
+/// - An error icon and message styled via [UniversalVideoPlayerTheme].
+/// - An optional button to open the video URL in an external player app.
+/// - An optional refresh button to retry loading the video using [playerGlobalKey].
 ///
-/// The appearance and text are styled based on the current [UniversalVideoPlayerTheme].
+/// This widget is designed to offer graceful error recovery and guidance to the user.
+///
+/// {@tool snippet}
+/// Example usage:
+/// ```dart
+/// VideoPlayerErrorPlaceholder(
+///   playerGlobalKey: playerKey,
+///   videoUrlToOpenExternally: videoUrl,
+///   showRefreshButton: true,
+/// )
+/// ```
+/// {@end-tool}
 class VideoPlayerErrorPlaceholder extends StatelessWidget {
-  /// Creates the error placeholder widget.
+  /// Creates a [VideoPlayerErrorPlaceholder].
   ///
-  /// If [videoUrlToOpenExternally] is provided, a button is shown
-  /// that allows the user to open the video in an external app.
+  /// If [videoUrlToOpenExternally] is non-null, an "Open in external player" button is shown.
+  /// If [showRefreshButton] is `true`, a "Refresh" button is also displayed.
   const VideoPlayerErrorPlaceholder({
     super.key,
     required this.playerGlobalKey,
@@ -23,11 +35,15 @@ class VideoPlayerErrorPlaceholder extends StatelessWidget {
     required this.showRefreshButton,
   });
 
-  /// The video URL to open in an external player, if applicable.
+  /// Optional URL to open the video in an external app.
+  ///
+  /// If provided, the widget shows a button that attempts to launch the video externally.
   final String? videoUrlToOpenExternally;
 
+  /// Whether to display a refresh button to retry video playback.
   final bool? showRefreshButton;
 
+  /// A reference to the video player's state, used to trigger refresh actions.
   final GlobalKey<VideoPlayerInitializerState> playerGlobalKey;
 
   @override
@@ -35,18 +51,18 @@ class VideoPlayerErrorPlaceholder extends StatelessWidget {
     final theme = UniversalVideoPlayerTheme.of(context)!;
 
     return Container(
-      color: theme.backgroundErrorColor,
+      color: theme.colors.backgroundError,
       width: double.infinity,
       height: double.infinity,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(theme.icons.error, color: theme.textErrorColor, size: 42),
+            Icon(theme.icons.error, color: theme.colors.textError, size: 42),
             const SizedBox(height: 16),
             Text(
-              theme.errorMessage,
-              style: TextStyle(color: theme.textErrorColor),
+              theme.labels.errorMessage,
+              style: TextStyle(color: theme.colors.textError),
               textAlign: TextAlign.center,
             ),
             if (videoUrlToOpenExternally != null)
@@ -55,7 +71,7 @@ class VideoPlayerErrorPlaceholder extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (defaultTargetPlatform == TargetPlatform.android) {
-                      final AndroidIntent intent = AndroidIntent(
+                      final intent = AndroidIntent(
                         action: 'action_view',
                         data: videoUrlToOpenExternally!,
                       );
@@ -64,17 +80,17 @@ class VideoPlayerErrorPlaceholder extends StatelessWidget {
                       await launchUrl(Uri.parse(videoUrlToOpenExternally!));
                     }
                   },
-                  child: Text(theme.openExternalPlayerLabel),
+                  child: Text(theme.labels.openExternalLabel),
                 ),
               ),
-            if (showRefreshButton != null)
+            if (showRefreshButton == true)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: OutlinedButton(
-                  onPressed: () async {
+                  onPressed: () {
                     playerGlobalKey.currentState?.refresh();
                   },
-                  child: Text(theme.refreshPlayerLabel),
+                  child: Text(theme.labels.refreshLabel),
                 ),
               ),
           ],

@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:universal_video_player/universal_video_player.dart';
 
-/// A play/pause toggle button with animated icon and optional replay support.
+/// A play/pause toggle button with animated transitions and optional replay support.
 ///
-/// The [VideoPlayPauseButton] displays an animated play/pause icon that reflects the current
-/// playback state of the provided [UniversalPlaybackController].
+/// The [VideoPlayPauseButton] displays an animated play/pause icon that reflects the
+/// current playback state managed by the given [UniversalPlaybackController].
 ///
-/// When the video is finished and is not a live stream, a replay icon is shown if [showReplayButton] is `true`.
-/// Tapping the replay icon restarts playback and optionally triggers the [onReplay] callback.
+/// When playback is finished and the content is not a live stream, a replay icon can
+/// be shown if [showReplayButton] is `true`. Tapping the replay icon restarts playback.
+/// The button also supports automatically muting the video when starting for the first time
+/// via [autoMuteOnStart].
 ///
-/// This widget also supports automatically muting the video on the first play using [autoMuteOnStart].
+/// The appearance of icons and background is themed using [UniversalVideoPlayerTheme].
 ///
-/// ### Example usage:
+/// {@tool snippet}
+/// Example usage:
 /// ```dart
 /// VideoPlayPauseButton(
-///   controller: myController,
+///   controller: myPlaybackController,
 ///   autoMuteOnStart: true,
-///   onReplay: () => print("Video replayed"),
+///   showReplayButton: true,
 /// )
 /// ```
+/// {@end-tool}
 class VideoPlayPauseButton extends StatefulWidget {
-  /// Creates a toggle button for play, pause, and optionally replay.
+  /// Creates a [VideoPlayPauseButton].
   ///
-  /// Requires a [UniversalPlaybackController] and whether to auto-mute on first play.
+  /// Requires a [controller] to manage playback state,
+  /// [autoMuteOnStart] to indicate if the video should auto-mute on first play,
+  /// and [showReplayButton] to show a replay icon when the video ends.
   const VideoPlayPauseButton({
     super.key,
     required this.controller,
@@ -30,19 +36,13 @@ class VideoPlayPauseButton extends StatefulWidget {
     required this.showReplayButton,
   });
 
-  /// The controller that manages video playback and notifies state changes.
-  ///
-  /// This controller is listened to internally to update the button icon based on playback state.
+  /// The playback controller that provides current state and actions.
   final UniversalPlaybackController controller;
 
-  /// Whether the video should be automatically muted when it starts for the first time.
-  ///
-  /// This is typically used when auto-playing muted content is desired.
+  /// If `true`, the video will be muted when started for the first time.
   final bool autoMuteOnStart;
 
-  /// Whether to display a replay icon when the video has finished playing.
-  ///
-  /// If `false`, the button becomes inactive once playback ends.
+  /// If `true`, a replay button is shown when the video is finished.
   final bool showReplayButton;
 
   @override
@@ -66,7 +66,7 @@ class _VideoPlayPauseButtonState extends State<VideoPlayPauseButton>
     controller.addListener(_updateIconAnimation);
   }
 
-  /// Syncs the animation with the controller's playback state.
+  /// Updates the animated icon based on playback state.
   void _updateIconAnimation() {
     if (!mounted) return;
 
@@ -86,12 +86,10 @@ class _VideoPlayPauseButtonState extends State<VideoPlayPauseButton>
     super.dispose();
   }
 
-  /// Handles user tap on the button.
-  ///
-  /// Depending on the state, it will:
-  /// - Mute and start playback if it's the first time and [autoMuteOnStart] is true.
-  /// - Replay the video if it is finished.
-  /// - Toggle between play and pause.
+  /// Handles tap interaction and determines playback behavior:
+  /// - Starts playback and mutes if it's the first play and [autoMuteOnStart] is `true`.
+  /// - Replays the video if it has finished and [showReplayButton] is `true`.
+  /// - Otherwise, toggles between play and pause.
   void _handleTap() {
     if (!controller.hasStarted && widget.autoMuteOnStart) {
       controller.mute();
@@ -115,7 +113,7 @@ class _VideoPlayPauseButtonState extends State<VideoPlayPauseButton>
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: theme.playPauseBackgroundColor.withAlpha(100),
+            color: theme.colors.playPauseBackground.withAlpha(100),
             borderRadius: BorderRadius.circular(200),
           ),
           child: AnimatedSwitcher(
@@ -131,7 +129,8 @@ class _VideoPlayPauseButtonState extends State<VideoPlayPauseButton>
                         ? Icon(
                           theme.icons.replay,
                           key: const ValueKey('replay'),
-                          color: theme.playPauseIconColor ?? theme.iconColor,
+                          color:
+                              theme.colors.playPauseIcon ?? theme.colors.icon,
                           size: 32,
                         )
                         : null
@@ -139,7 +138,7 @@ class _VideoPlayPauseButtonState extends State<VideoPlayPauseButton>
                       key: const ValueKey('play_pause'),
                       icon: theme.icons.playPause,
                       progress: _iconAnimationController,
-                      color: theme.playPauseIconColor ?? theme.iconColor,
+                      color: theme.colors.playPauseIcon ?? theme.colors.icon,
                       size: 32,
                     ),
           ),

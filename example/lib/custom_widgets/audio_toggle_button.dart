@@ -3,23 +3,47 @@ import 'package:universal_video_player/universal_video_player.dart';
 
 import 'video_control_icon_button.dart';
 
-/// A button that toggles between mute and unmute states in a video player.
+/// A toggle button to mute or unmute the audio in a video player.
 ///
-/// [AudioToggleButton] listens to the current volume from [UniversalPlaybackController]
-/// and updates the icon accordingly. When pressed, it toggles mute/unmute and
-/// optionally triggers [onAudioToggled] callback with the new mute state.
+/// The [AudioToggleButton] reflects the current volume state managed by a
+/// [UniversalPlaybackController]. When tapped, it toggles the mute state:
+/// if the audio is currently on, it will be muted; if muted, it will be unmuted.
+/// The button icon updates dynamically to indicate the current state.
+///
+/// Optionally, a [onAudioToggled] callback can be provided to receive updates
+/// when the mute state changes.
+///
+/// {@tool snippet}
+/// Example usage:
+/// ```dart
+/// AudioToggleButton(
+///   controller: myPlaybackController,
+///   onAudioToggled: (isMuted) {
+///     print('Audio is muted: $isMuted');
+///   },
+/// )
+/// ```
+/// {@end-tool}
 class AudioToggleButton extends StatelessWidget {
-  /// Creates a mute/unmute toggle button.
+  /// Creates an [AudioToggleButton].
+  ///
+  /// The [controller] must not be null and is used to read and change the
+  /// current volume state.
+  ///
+  /// The [onAudioToggled] callback is optional and will be invoked with the
+  /// new mute state: `true` if muted, `false` otherwise.
   const AudioToggleButton({
     super.key,
     required this.controller,
     required this.onAudioToggled,
   });
 
-  /// The media playback controller that manages volume and mute state.
+  /// Controller that manages audio playback and mute state.
   final UniversalPlaybackController controller;
 
-  /// Optional callback called with `true` if muted, `false` otherwise.
+  /// Callback triggered when the audio mute state is toggled.
+  ///
+  /// Receives `true` if the audio is now muted, or `false` if unmuted.
   final void Function(bool isMuted)? onAudioToggled;
 
   @override

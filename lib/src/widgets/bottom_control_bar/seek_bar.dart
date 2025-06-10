@@ -107,9 +107,9 @@ class _SeekBarState extends State<SeekBar> {
             value: positionValue.toDouble(),
             max: durationValue,
             allowSeeking: widget.allowSeeking,
-            activeColor: theme.activeColor,
-            thumbColor: theme.thumbColor ?? theme.activeColor,
-            inactiveColor: theme.inactiveColor,
+            activeColor: theme.colors.active,
+            thumbColor: theme.colors.thumb ?? theme.colors.active,
+            inactiveColor: theme.colors.inactive,
             onChanged: (val) {
               setState(() {
                 _dragValue = val;

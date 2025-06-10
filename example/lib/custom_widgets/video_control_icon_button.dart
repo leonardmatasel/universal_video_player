@@ -1,24 +1,41 @@
 import 'package:flutter/material.dart';
-
 import 'package:universal_video_player/universal_video_player.dart';
 
-/// A customizable icon button for video player controls, such as play, pause, mute, etc.
+/// A reusable icon button for video player controls, such as play, pause, mute, and fullscreen.
 ///
-/// [VideoControlIconButton] is a reusable component that responds to user interaction
-/// with an animated icon transition. It uses the theming defined in [UniversalVideoPlayerTheme].
+/// The [VideoControlIconButton] provides a consistent, theme-aware control element
+/// for video player interfaces. It integrates with [UniversalVideoPlayerTheme] to apply
+/// custom icon styles, and supports animated transitions between icons via [AnimatedSwitcher].
+///
+/// Typically used in conjunction with playback or UI control widgets.
+///
+/// {@tool snippet}
+/// Example usage:
+/// ```dart
+/// VideoControlIconButton(
+///   icon: Icons.play_arrow,
+///   onPressed: () {
+///     // Handle play button press
+///   },
+/// )
+/// ```
+/// {@end-tool}
 class VideoControlIconButton extends StatelessWidget {
-  /// The icon to display inside the button.
-  final IconData icon;
-
-  /// The callback invoked when the button is tapped.
-  final VoidCallback onPressed;
-
-  /// Creates a new video control button.
+  /// Creates a [VideoControlIconButton].
+  ///
+  /// The [icon] is displayed as the button's visual representation.
+  /// The [onPressed] callback is triggered when the user taps the button.
   const VideoControlIconButton({
     super.key,
     required this.icon,
     required this.onPressed,
   });
+
+  /// The icon to display inside the control button.
+  final IconData icon;
+
+  /// Callback invoked when the button is tapped.
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +48,7 @@ class VideoControlIconButton extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 100),
-          child: Icon(icon, key: ValueKey(icon), color: theme.iconColor),
+          child: Icon(icon, key: ValueKey(icon), color: theme.colors.icon),
         ),
       ),
     );

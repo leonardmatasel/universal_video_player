@@ -7,8 +7,9 @@ import 'package:universal_video_player/src/widgets/player/video_player_error_pla
 import 'package:universal_video_player/universal_video_player/controllers/global_playback_controller.dart';
 import 'package:universal_video_player/universal_video_player/controllers/universal_playback_controller.dart';
 import 'package:universal_video_player/universal_video_player/models/video_player_callbacks.dart';
-import 'package:universal_video_player/universal_video_player/models/video_player_options.dart';
+import 'package:universal_video_player/universal_video_player/models/video_player_configuration.dart';
 import 'package:universal_video_player/universal_video_player/models/video_source_type.dart';
+import 'package:universal_video_player/universal_video_player/theme/universal_video_player_theme.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:universal_video_player/src/utils/logger.dart';
 
@@ -21,7 +22,7 @@ class VideoPlayerInitializer extends StatefulWidget {
     this.globalController,
   });
 
-  final VideoPlayerOptions options;
+  final VideoPlayerConfiguration options;
   final VideoPlayerCallbacks callbacks;
 
   final GlobalPlaybackController? globalController;
@@ -62,10 +63,10 @@ class VideoPlayerInitializerState extends State<VideoPlayerInitializer>
   }
 
   Future<void> _initialize() async {
-    final type = widget.options.playbackConfig.videoSourceType;
+    final type = widget.options.videoSourceConfiguration.videoSourceType;
     if (type == VideoSourceType.vimeo) {
       _vimeoVideoInfo = await VimeoVideoApi.fetchVimeoVideoInfo(
-        widget.options.playbackConfig.videoId!,
+        widget.options.videoSourceConfiguration.videoId!,
       );
 
       if (_vimeoVideoInfo == null) {
@@ -97,7 +98,7 @@ class VideoPlayerInitializerState extends State<VideoPlayerInitializer>
   }
 
   void _startReadyTimeout(UniversalPlaybackController controller) {
-    Future.delayed(widget.options.playbackConfig.timeoutDuration, () {
+    Future.delayed(widget.options.videoSourceConfiguration.timeoutDuration, () {
       if (mounted && !controller.isReady) {
         setState(() {
           _hasError = true;
@@ -110,30 +111,30 @@ class VideoPlayerInitializerState extends State<VideoPlayerInitializer>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final theme = UniversalVideoPlayerTheme.of(context)!;
 
     if (_isLoading) {
-      return widget.options.uiOptions.showLoadingWidget
-          ? widget.options.customWidgets.loadingWidget
+      return widget.options.playerUIVisibilityOptions.showLoadingWidget
+          ? widget.options.customPlayerWidgets.loadingWidget
           : const SizedBox.shrink();
     }
 
     if (_hasError || _controller == null) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(
-          widget.options.playerTheme.borderRadius,
-        ),
+        borderRadius: BorderRadius.circular(theme.shapes.borderRadius),
         child:
-            widget.options.uiOptions.showErrorPlaceholder
-                ? widget.options.customWidgets.errorPlaceholder ??
+            widget.options.playerUIVisibilityOptions.showErrorPlaceholder
+                ? widget.options.customPlayerWidgets.errorPlaceholder ??
                     VideoPlayerErrorPlaceholder(
                       playerGlobalKey: widget.options.globalKeyInitializer,
                       showRefreshButton:
                           widget
                               .options
-                              .uiOptions
+                              .playerUIVisibilityOptions
                               .showRefreshButtonInErrorPlaceholder,
                       videoUrlToOpenExternally:
-                          widget.options.playbackConfig.videoUrl.toString(),
+                          widget.options.videoSourceConfiguration.videoUrl
+                              .toString(),
                     )
                 : const SizedBox.shrink(),
       );
@@ -142,22 +143,33 @@ class VideoPlayerInitializerState extends State<VideoPlayerInitializer>
     final child = widget.buildPlayer(
       context,
       _controller!,
-      widget.options.uiOptions.showThumbnailAtStart ? _getThumbnail() : null,
+      widget.options.playerUIVisibilityOptions.showThumbnailAtStart
+          ? _getThumbnail()
+          : null,
     );
 
-    return widget.options.globalBehavior.synchronizeMuteAcrossPlayers &&
-            widget.options.globalBehavior.useGlobalPlaybackController
+    return widget
+                .options
+                .globalPlaybackControlSettings
+                .synchronizeMuteAcrossPlayers &&
+            widget
+                .options
+                .globalPlaybackControlSettings
+                .useGlobalPlaybackController
         ? GlobalVolumeSynchronizer(controller: _controller!, child: child)
         : child;
   }
 
   ImageProvider<Object>? _getThumbnail() {
-    if (!widget.options.uiOptions.showThumbnailAtStart) return null;
+    if (!widget.options.playerUIVisibilityOptions.showThumbnailAtStart)
+      return null;
 
-    switch (widget.options.playbackConfig.videoSourceType) {
+    switch (widget.options.videoSourceConfiguration.videoSourceType) {
       case VideoSourceType.youtube:
         final videoId =
-            VideoId(widget.options.playbackConfig.videoUrl!.toString()).value;
+            VideoId(
+              widget.options.videoSourceConfiguration.videoUrl!.toString(),
+            ).value;
         return NetworkImage("https://i3.ytimg.com/vi/$videoId/sddefault.jpg");
 
       case VideoSourceType.vimeo:
@@ -166,10 +178,10 @@ class VideoPlayerInitializerState extends State<VideoPlayerInitializer>
             : null;
 
       case VideoSourceType.network:
-        return widget.options.customWidgets.thumbnail;
+        return widget.options.customPlayerWidgets.thumbnail;
 
       case VideoSourceType.asset:
-        return widget.options.customWidgets.thumbnail;
+        return widget.options.customPlayerWidgets.thumbnail;
     }
   }
 }

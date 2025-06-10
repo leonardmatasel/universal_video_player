@@ -13,27 +13,28 @@ class NetworkLink extends StatelessWidget {
         child: Center(
           child: UniversalVideoPlayer(
             callbacks: VideoPlayerCallbacks(),
-            options: VideoPlayerOptions(
-              playbackConfig: PlaybackConfig(
+            options: VideoPlayerConfiguration(
+              videoSourceConfiguration: VideoSourceConfiguration(
                 videoUrl: Uri.parse(
                   'https://www.w3schools.com/tags/mov_bbb.mp4',
                 ),
                 videoSourceType: VideoSourceType.network,
               ),
-              uiOptions: VideoPlayerUIOptions(
+              playerUIVisibilityOptions: PlayerUIVisibilityOptions(
                 useSafeAreaForBottomControls: true,
               ),
-              globalBehavior: GlobalPlaybackBehavior().copyWith(
-                useGlobalPlaybackController: true,
-              ),
-              customWidgets: CustomWidgets().copyWith(
+              globalPlaybackControlSettings: GlobalPlaybackControlSettings()
+                  .copyWith(useGlobalPlaybackController: true),
+              customPlayerWidgets: CustomPlayerWidgets().copyWith(
                 loadingWidget: const Center(
                   child: CircularProgressIndicator(color: Colors.blueAccent),
                 ),
               ),
-              playerTheme: PlayerThemeData().copyWith(
-                borderRadius: 0,
-                activeColor: Colors.blueAccent,
+              playerTheme: UniversalVideoPlayerThemeData().copyWith(
+                shapes: VideoPlayerShapeTheme().copyWith(borderRadius: 0),
+                colors: VideoPlayerColorScheme().copyWith(
+                  active: Colors.blueAccent,
+                ),
               ),
             ),
           ),

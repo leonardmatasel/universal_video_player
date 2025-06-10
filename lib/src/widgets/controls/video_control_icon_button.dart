@@ -30,7 +30,7 @@ class VideoControlIconButton extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 100),
-          child: Icon(icon, key: ValueKey(icon), color: theme.iconColor),
+          child: Icon(icon, key: ValueKey(icon), color: theme.colors.icon),
         ),
       ),
     );

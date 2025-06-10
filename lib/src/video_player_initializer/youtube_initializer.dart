@@ -7,7 +7,7 @@ import 'package:video_player/video_player.dart' show VideoPlayer;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class YouTubeInitializer implements IVideoPlayerInitializerStrategy {
-  final VideoPlayerOptions options;
+  final VideoPlayerConfiguration options;
   final VideoPlayerCallbacks callbacks;
   final GlobalPlaybackController? globalController;
   final void Function()? onErrorCallback;
@@ -21,7 +21,9 @@ class YouTubeInitializer implements IVideoPlayerInitializerStrategy {
 
   @override
   Future<UniversalPlaybackController?> initialize() async {
-    final videoId = VideoId(options.playbackConfig.videoUrl!.toString());
+    final videoId = VideoId(
+      options.videoSourceConfiguration.videoUrl!.toString(),
+    );
     try {
       final ytVideo = await YouTubeService.getVideoYoutubeDetails(videoId);
       final isLive = ytVideo.isLive;
@@ -34,7 +36,8 @@ class YouTubeInitializer implements IVideoPlayerInitializerStrategy {
       } else {
         final urls = await YouTubeService.fetchVideoAndAudioUrls(
           videoId,
-          preferredQualities: options.playbackConfig.preferredQualities,
+          preferredQualities:
+              options.videoSourceConfiguration.preferredQualities,
         );
         videoUrl = Uri.parse(urls.videoStreamUrl);
         audioUrl = Uri.parse(urls.audioStreamUrl);
@@ -46,11 +49,11 @@ class YouTubeInitializer implements IVideoPlayerInitializerStrategy {
         dataSource: null,
         isLive: isLive,
         globalController: globalController,
-        initialPosition: options.playbackConfig.initialPosition,
-        initialVolume: options.playbackConfig.initialVolume,
-        autoPlay: options.playbackConfig.autoPlay,
+        initialPosition: options.videoSourceConfiguration.initialPosition,
+        initialVolume: options.videoSourceConfiguration.initialVolume,
+        autoPlay: options.videoSourceConfiguration.autoPlay,
         callbacks: callbacks,
-        type: options.playbackConfig.videoSourceType,
+        type: options.videoSourceConfiguration.videoSourceType,
       );
 
       controller.sharedPlayerNotifier.value = Hero(

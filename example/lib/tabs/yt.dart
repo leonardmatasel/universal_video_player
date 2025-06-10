@@ -18,23 +18,25 @@ class YT extends StatelessWidget {
               print('UNIVERSAL PLAYER: Seek ended at: $position');
             },
           ),
-          options: VideoPlayerOptions(
-            playbackConfig: PlaybackConfig(
+          options: VideoPlayerConfiguration(
+            videoSourceConfiguration: VideoSourceConfiguration(
               videoUrl: Uri.parse(
                 'https://www.youtube.com/watch?v=QN1odfjtMoo',
               ),
               videoSourceType: VideoSourceType.youtube,
             ),
-            uiOptions: VideoPlayerUIOptions().copyWith(
+            playerUIVisibilityOptions: PlayerUIVisibilityOptions().copyWith(
               useSafeAreaForBottomControls: true,
             ),
-            customWidgets: CustomWidgets().copyWith(
+            customPlayerWidgets: CustomPlayerWidgets().copyWith(
               thumbnailFit: BoxFit.contain,
             ),
-            playerTheme: PlayerThemeData().copyWith(
-              icons: VideoPlayerIcons().copyWith(error: Icons.warning),
-              backgroundOverlayColor: Colors.white,
-              backgroundOverlayAlpha: 100,
+            playerTheme: UniversalVideoPlayerThemeData().copyWith(
+              icons: VideoPlayerIconTheme().copyWith(error: Icons.warning),
+              overlays: VideoPlayerOverlayTheme().copyWith(
+                backgroundColor: Colors.black,
+                alpha: 100,
+              ),
             ),
           ),
         ),

@@ -3,7 +3,7 @@ import 'package:universal_video_player/src/widgets/controls/video_play_pause_but
 import 'package:universal_video_player/src/widgets/fade_visibility.dart';
 import 'package:universal_video_player/universal_video_player/controllers/universal_playback_controller.dart';
 import 'package:universal_video_player/universal_video_player/models/video_player_callbacks.dart';
-import 'package:universal_video_player/universal_video_player/models/video_player_options.dart';
+import 'package:universal_video_player/universal_video_player/models/video_player_configuration.dart';
 
 /// A play/pause button widget that automatically hides itself based on playback state.
 ///
@@ -27,7 +27,7 @@ class AutoHidePlayPauseButton extends StatelessWidget {
   final VideoPlayerCallbacks callbacks;
 
   /// Configuration options for player behavior and appearance.
-  final VideoPlayerOptions options;
+  final VideoPlayerConfiguration options;
 
   /// Creates an auto-hiding play/pause button with optional replay support.
   const AutoHidePlayPauseButton({
@@ -47,8 +47,9 @@ class AutoHidePlayPauseButton extends StatelessWidget {
           isVisible: isVisible,
           child: VideoPlayPauseButton(
             controller: controller,
-            showReplayButton: options.uiOptions.showReplayButton,
-            autoMuteOnStart: options.playbackConfig.autoMuteOnStart,
+            showReplayButton:
+                options.playerUIVisibilityOptions.showReplayButton,
+            autoMuteOnStart: options.videoSourceConfiguration.autoMuteOnStart,
           ),
         );
       },

@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 
-/// An inherited widget to provide consistent theming for [UniversalVideoPlayer] instances.
+/// An inherited widget that provides consistent theming for
+/// [UniversalVideoPlayer] instances within its widget subtree.
 ///
-/// Use this widget to wrap parts of your widget tree that should use the same [VideoPlayerThemeData].
+/// Wrap the parts of your widget tree that should share the same
+/// [UniversalVideoPlayerThemeData] with this widget.
+///
+/// Example usage:
+/// ```dart
+/// UniversalVideoPlayerTheme(
+///   data: UniversalVideoPlayerThemeData(
+///     colors: VideoPlayerColorScheme(active: Colors.blueAccent),
+///   ),
+///   child: UniversalVideoPlayer(),
+/// )
+/// ```
 class UniversalVideoPlayerTheme extends InheritedTheme {
-  /// The data defining the visual appearance of the video player.
-  final PlayerThemeData data;
+  /// The theme data that defines the visual appearance of the video player.
+  final UniversalVideoPlayerThemeData data;
 
   const UniversalVideoPlayerTheme({
     super.key,
@@ -23,207 +35,200 @@ class UniversalVideoPlayerTheme extends InheritedTheme {
     return UniversalVideoPlayerTheme(data: data, child: child);
   }
 
-  /// Retrieves the current theme data from the closest ancestor [UniversalVideoPlayerTheme].
-  static PlayerThemeData? of(BuildContext context) {
+  /// Retrieves the nearest [UniversalVideoPlayerThemeData] from
+  /// the widget tree that encloses the given [context].
+  ///
+  /// Returns null if no [UniversalVideoPlayerTheme] ancestor is found.
+  static UniversalVideoPlayerThemeData? of(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<UniversalVideoPlayerTheme>()
         ?.data;
   }
 }
 
-class PlayerThemeData {
-  // === Colors ===
+/// A container for all theme-related data used by
+/// [UniversalVideoPlayer], divided into modular sub-themes.
+class UniversalVideoPlayerThemeData {
+  /// Color scheme for all colors used in the video player.
+  final VideoPlayerColorScheme colors;
 
-  /// Color used for active elements (e.g., seek bar).
-  final Color activeColor; //checked
+  /// Label theme data, including default strings and messages.
+  final VideoPlayerLabelTheme labels;
 
-  /// Color of the draggable thumb in the seek bar.
-  final Color? thumbColor; //checked
+  /// Icon data theme used for player controls and status indicators.
+  final VideoPlayerIconTheme icons;
 
-  /// Color for inactive controls (e.g., unplayed portion of progress bar).
-  final Color inactiveColor; //checked
+  /// Shape-related styling such as border radius.
+  final VideoPlayerShapeTheme shapes;
 
-  /// Default background color of the thumbnail.
-  final Color backgroundThumbnailColor; //checked
+  /// Theme data for overlays like background shading.
+  final VideoPlayerOverlayTheme overlays;
 
-  /// Color of the play/pause icon.
-  final Color? playPauseIconColor; //checked
-
-  /// Background color behind the play/pause icon.
-  final Color playPauseBackgroundColor; //checked
-
-  /// Text color used across the player (optional override).
-  final Color? textColor; //checked
-
-  /// Color of the live indicator badge.
-  final Color? liveIndicatorColor; //checked
-
-  /// General icon color (used for controls).
-  final Color? iconColor; //checked
-
-  // === Error UI ===
-
-  /// Background color of the error screen.
-  final Color backgroundErrorColor; //checked
-
-  /// Text color used in the error message.
-  final Color textErrorColor; //checked
-
-  /// Default error message displayed on playback failure.
-  final String errorMessage; //checked
-
-  /// Label for opening the video in an external player.
-  final String openExternalPlayerLabel; //checked
-
-  /// Label for opening the video in an external player.
-  final String refreshPlayerLabel;
-
-  // === UI/UX ===
-
-  /// Border radius applied to the video player.
-  final double borderRadius; //checked
-
-  /// Background color overlay placed behind the video player.
-  ///
-  /// To have effect, this, [backgroundOverlayAlpha], and [enableBackgroundOverlayClip]
-  /// must all be non-null and properly set.
-  final Color? backgroundOverlayColor; //checked
-
-  /// Alpha value (0-255) applied to [backgroundOverlayColor], controlling its transparency.
-  ///
-  /// To have effect, this, [backgroundOverlayColor], and [enableBackgroundOverlayClip]
-  /// must all be non-null and properly set.
-  final int? backgroundOverlayAlpha; //checked
-
-  /// Icons used throughout the video player UI.
-  final VideoPlayerIcons icons;
-
-  const PlayerThemeData({
-    this.activeColor = Colors.redAccent,
-    this.thumbColor,
-    this.inactiveColor = Colors.grey,
-    this.playPauseIconColor = Colors.white,
-    this.playPauseBackgroundColor = Colors.black,
-    this.textColor = Colors.white,
-    this.liveIndicatorColor = Colors.red,
-    this.iconColor = Colors.white,
-    this.backgroundErrorColor = Colors.black,
-    this.textErrorColor = Colors.white,
-    this.errorMessage = 'An error occurred while loading the video.',
-    this.openExternalPlayerLabel = 'Open with external player',
-    this.refreshPlayerLabel = 'Refresh',
-    this.borderRadius = 0,
-    this.backgroundOverlayColor,
-    this.backgroundOverlayAlpha = 150,
-    this.backgroundThumbnailColor = Colors.transparent,
-    this.icons = const VideoPlayerIcons(),
+  const UniversalVideoPlayerThemeData({
+    this.colors = const VideoPlayerColorScheme(),
+    this.labels = const VideoPlayerLabelTheme(),
+    this.icons = const VideoPlayerIconTheme(),
+    this.shapes = const VideoPlayerShapeTheme(),
+    this.overlays = const VideoPlayerOverlayTheme(),
   });
 
-  /// Creates a copy of this [PlayerThemeData] but with the given fields
-  /// replaced by the new values.
-  ///
-  /// This method allows you to create a new [PlayerThemeData] instance
-  /// by selectively overriding some properties, while keeping the rest
-  /// unchanged from the current instance.
-  ///
-  /// Useful for modifying only certain theme aspects without
-  /// redefining the entire theme.
-  ///
-  /// Parameters:
-  /// - [activeColor]: Color for active UI elements (e.g., seek bar).
-  /// - [thumbColor]: Color for the draggable thumb on the seek bar.
-  /// - [inactiveColor]: Color for inactive UI elements (e.g., unplayed progress).
-  /// - [playPauseIconColor]: Color of the play/pause icon.
-  /// - [playPauseBackgroundColor]: Background color behind the play/pause icon.
-  /// - [textColor]: General text color override.
-  /// - [liveIndicatorColor]: Color of the live indicator badge.
-  /// - [iconColor]: General icon color used in the controls.
-  /// - [backgroundErrorColor]: Background color for error screens.
-  /// - [textErrorColor]: Text color for error messages.
-  /// - [errorMessage]: Default error message string.
-  /// - [openExternalPlayerLabel]: Label for opening the video externally.
-  /// - [borderRadius]: Border radius applied to the video player UI.
-  /// - [backgroundOverlayColor]: Background overlay color behind the player.
-  /// - [backgroundOverlayAlpha]: Transparency (alpha) of the overlay (0-255).
-  /// - [backgroundThumbnailColor]: Default background color of video thumbnails.
-  /// - [icons]: Custom set of icons used in the video player.
-  ///
-  /// Returns:
-  /// A new [PlayerThemeData] instance with updated fields.
-  ///
-  /// Fields not provided will retain their current values.
-  PlayerThemeData copyWith({
-    Color? activeColor,
-    Color? thumbColor,
-    Color? inactiveColor,
-    Color? playPauseIconColor,
-    Color? playPauseBackgroundColor,
-    Color? textColor,
-    Color? liveIndicatorColor,
-    Color? iconColor,
-    Color? backgroundErrorColor,
-    Color? textErrorColor,
-    String? errorMessage,
-    String? openExternalPlayerLabel,
-    String? refreshPlayerLabel,
-    double? borderRadius,
-    Color? backgroundOverlayColor,
-    int? backgroundOverlayAlpha,
-    Color? backgroundThumbnailColor,
-    VideoPlayerIcons? icons,
+  /// Returns a copy of this theme data, overriding only the
+  /// specified properties.
+  UniversalVideoPlayerThemeData copyWith({
+    VideoPlayerColorScheme? colors,
+    VideoPlayerLabelTheme? labels,
+    VideoPlayerIconTheme? icons,
+    VideoPlayerShapeTheme? shapes,
+    VideoPlayerOverlayTheme? overlays,
   }) {
-    return PlayerThemeData(
-      activeColor: activeColor ?? this.activeColor,
-      thumbColor: thumbColor ?? this.thumbColor,
-      inactiveColor: inactiveColor ?? this.inactiveColor,
-      playPauseIconColor: playPauseIconColor ?? this.playPauseIconColor,
-      playPauseBackgroundColor:
-          playPauseBackgroundColor ?? this.playPauseBackgroundColor,
-      textColor: textColor ?? this.textColor,
-      liveIndicatorColor: liveIndicatorColor ?? this.liveIndicatorColor,
-      iconColor: iconColor ?? this.iconColor,
-      backgroundErrorColor: backgroundErrorColor ?? this.backgroundErrorColor,
-      textErrorColor: textErrorColor ?? this.textErrorColor,
-      errorMessage: errorMessage ?? this.errorMessage,
-      openExternalPlayerLabel:
-          openExternalPlayerLabel ?? this.openExternalPlayerLabel,
-      refreshPlayerLabel: refreshPlayerLabel ?? this.refreshPlayerLabel,
-      borderRadius: borderRadius ?? this.borderRadius,
-      backgroundOverlayColor:
-          backgroundOverlayColor ?? this.backgroundOverlayColor,
-      backgroundOverlayAlpha:
-          backgroundOverlayAlpha ?? this.backgroundOverlayAlpha,
-      backgroundThumbnailColor:
-          backgroundThumbnailColor ?? this.backgroundThumbnailColor,
+    return UniversalVideoPlayerThemeData(
+      colors: colors ?? this.colors,
+      labels: labels ?? this.labels,
       icons: icons ?? this.icons,
+      shapes: shapes ?? this.shapes,
+      overlays: overlays ?? this.overlays,
     );
   }
 }
 
-/// Icon set used throughout the video player for key UI elements.
-class VideoPlayerIcons {
+/// Defines color properties for various UI elements of the video player.
+@immutable
+class VideoPlayerColorScheme {
+  /// Color for active UI elements like the progress bar fill.
+  final Color active;
+
+  /// Color for the draggable thumb on the progress bar.
+  final Color? thumb;
+
+  /// Color for inactive or disabled UI elements.
+  final Color inactive;
+
+  /// Background color of the video thumbnail display.
+  final Color backgroundThumbnail;
+
+  /// Color of the play/pause icon.
+  final Color? playPauseIcon;
+
+  /// Background color behind the play/pause icon.
+  final Color playPauseBackground;
+
+  /// Color of the live indicator badge (optional).
+  final Color? liveIndicator;
+
+  /// General icon color for controls (optional).
+  final Color? icon;
+
+  /// Background color for the error screen.
+  final Color backgroundError;
+
+  /// Text color for error messages.
+  final Color textError;
+
+  /// Default text color for labels and messages.
+  final Color? textDefault;
+
+  const VideoPlayerColorScheme({
+    this.active = Colors.redAccent,
+    this.thumb,
+    this.inactive = Colors.grey,
+    this.backgroundThumbnail = Colors.transparent,
+    this.playPauseIcon,
+    this.playPauseBackground = Colors.black,
+    this.liveIndicator = Colors.red,
+    this.icon,
+    this.backgroundError = Colors.black,
+    this.textError = Colors.white,
+    this.textDefault = Colors.white,
+  });
+
+  /// Creates a copy of this color scheme overriding
+  /// the specified color values.
+  VideoPlayerColorScheme copyWith({
+    Color? active,
+    Color? thumb,
+    Color? inactive,
+    Color? backgroundThumbnail,
+    Color? playPauseIcon,
+    Color? playPauseBackground,
+    Color? liveIndicator,
+    Color? icon,
+    Color? backgroundError,
+    Color? textError,
+    Color? textDefault,
+  }) {
+    return VideoPlayerColorScheme(
+      active: active ?? this.active,
+      thumb: thumb ?? this.thumb,
+      inactive: inactive ?? this.inactive,
+      backgroundThumbnail: backgroundThumbnail ?? this.backgroundThumbnail,
+      playPauseIcon: playPauseIcon ?? this.playPauseIcon,
+      playPauseBackground: playPauseBackground ?? this.playPauseBackground,
+      liveIndicator: liveIndicator ?? this.liveIndicator,
+      icon: icon ?? this.icon,
+      backgroundError: backgroundError ?? this.backgroundError,
+      textError: textError ?? this.textError,
+      textDefault: textDefault ?? this.textDefault,
+    );
+  }
+}
+
+/// Defines default string labels used in the video player.
+@immutable
+class VideoPlayerLabelTheme {
+  /// Default error message displayed on playback failure.
+  final String errorMessage;
+
+  /// Label for the action to open video in an external player.
+  final String openExternalLabel;
+
+  /// Label for the action to refresh/reload the player.
+  final String refreshLabel;
+
+  const VideoPlayerLabelTheme({
+    this.errorMessage = 'An error occurred while loading the video.',
+    this.openExternalLabel = 'Open with external player',
+    this.refreshLabel = 'Refresh',
+  });
+
+  /// Returns a copy of this label theme overriding only the provided fields.
+  VideoPlayerLabelTheme copyWith({
+    String? errorMessage,
+    String? openExternalLabel,
+    String? refreshLabel,
+  }) {
+    return VideoPlayerLabelTheme(
+      errorMessage: errorMessage ?? this.errorMessage,
+      openExternalLabel: openExternalLabel ?? this.openExternalLabel,
+      refreshLabel: refreshLabel ?? this.refreshLabel,
+    );
+  }
+}
+
+/// Defines icon data used for various player controls and status indicators.
+@immutable
+class VideoPlayerIconTheme {
   /// Icon for exiting fullscreen mode.
   final IconData exitFullScreen;
 
   /// Icon for entering fullscreen mode.
   final IconData fullScreen;
 
-  /// Icon for volume on (mute).
+  /// Icon representing volume on (mute).
   final IconData mute;
 
-  /// Icon for volume off (unmute).
+  /// Icon representing volume off (unmute).
   final IconData unMute;
 
-  /// Icon for replaying the video.
+  /// Icon used for replaying the video.
   final IconData replay;
 
-  /// Animated play/pause toggle icon.
+  /// Animated icon used to toggle play/pause.
   final AnimatedIconData playPause;
 
-  /// Icon displayed on playback error.
+  /// Icon shown on playback error.
   final IconData error;
 
-  const VideoPlayerIcons({
+  const VideoPlayerIconTheme({
     this.exitFullScreen = Icons.fullscreen_exit,
     this.fullScreen = Icons.fullscreen,
     this.mute = Icons.volume_up,
@@ -233,18 +238,8 @@ class VideoPlayerIcons {
     this.error = Icons.error,
   });
 
-  /// Creates a copy of this [VideoPlayerIcons] with the given fields replaced.
-  ///
-  /// Allows selective overriding of individual icon data while preserving the rest.
-  ///
-  /// Example:
-  /// ```dart
-  /// final newIcons = oldIcons.copyWith(
-  ///   fullScreen: Icons.fullscreen_sharp,
-  ///   error: Icons.warning,
-  /// );
-  /// ```
-  VideoPlayerIcons copyWith({
+  /// Creates a copy of this icon theme with selective overrides.
+  VideoPlayerIconTheme copyWith({
     IconData? exitFullScreen,
     IconData? fullScreen,
     IconData? mute,
@@ -253,7 +248,7 @@ class VideoPlayerIcons {
     AnimatedIconData? playPause,
     IconData? error,
   }) {
-    return VideoPlayerIcons(
+    return VideoPlayerIconTheme(
       exitFullScreen: exitFullScreen ?? this.exitFullScreen,
       fullScreen: fullScreen ?? this.fullScreen,
       mute: mute ?? this.mute,
@@ -263,4 +258,36 @@ class VideoPlayerIcons {
       error: error ?? this.error,
     );
   }
+}
+
+/// Defines shape-related styling options such as border radius.
+@immutable
+class VideoPlayerShapeTheme {
+  /// Border radius applied to the video player UI.
+  final double borderRadius;
+
+  const VideoPlayerShapeTheme({this.borderRadius = 0});
+
+  /// Returns a copy with an updated border radius.
+  VideoPlayerShapeTheme copyWith({double? borderRadius}) =>
+      VideoPlayerShapeTheme(borderRadius: borderRadius ?? this.borderRadius);
+}
+
+/// Defines theming for overlays such as background shading behind the player.
+@immutable
+class VideoPlayerOverlayTheme {
+  /// Background color used for overlays.
+  final Color? backgroundColor;
+
+  /// Alpha transparency value (0-255) applied to the background color.
+  final int? alpha;
+
+  const VideoPlayerOverlayTheme({this.backgroundColor, this.alpha = 150});
+
+  /// Returns a copy overriding the background color and/or alpha.
+  VideoPlayerOverlayTheme copyWith({Color? backgroundColor, int? alpha}) =>
+      VideoPlayerOverlayTheme(
+        backgroundColor: backgroundColor ?? this.backgroundColor,
+        alpha: alpha ?? this.alpha,
+      );
 }

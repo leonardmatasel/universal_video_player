@@ -6,7 +6,7 @@ import 'package:universal_video_player/src/widgets/adaptive_video_player_display
 import 'package:universal_video_player/src/widgets/video_overlay_controls.dart';
 import 'package:universal_video_player/universal_video_player/controllers/universal_playback_controller.dart';
 import 'package:universal_video_player/universal_video_player/models/video_player_callbacks.dart';
-import 'package:universal_video_player/universal_video_player/models/video_player_options.dart';
+import 'package:universal_video_player/universal_video_player/models/video_player_configuration.dart';
 
 /// A full-screen video player widget that manages system UI, device orientation,
 /// and overlays interactive video controls.
@@ -15,13 +15,13 @@ import 'package:universal_video_player/universal_video_player/models/video_playe
 /// enters immersive full-screen mode, and restores system UI overlays when dismissed.
 ///
 /// It integrates with a [UniversalPlaybackController] for video playback control,
-/// uses [VideoPlayerOptions] for configuration, and reports events through [VideoPlayerCallbacks].
+/// uses [VideoPlayerConfiguration] for configuration, and reports events through [VideoPlayerCallbacks].
 class FullscreenVideoPlayer extends StatefulWidget {
   /// The controller managing media playback state and logic.
   final UniversalPlaybackController controller;
 
   /// Configuration options for the video player appearance and behavior.
-  final VideoPlayerOptions options;
+  final VideoPlayerConfiguration options;
 
   /// Callbacks to respond to video player events and user interactions.
   final VideoPlayerCallbacks callbacks;

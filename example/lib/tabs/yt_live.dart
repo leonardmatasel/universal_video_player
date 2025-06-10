@@ -11,28 +11,32 @@ class YTLive extends StatelessWidget {
       body: Center(
         child: UniversalVideoPlayer(
           callbacks: VideoPlayerCallbacks(),
-          options: VideoPlayerOptions(
-            playbackConfig: PlaybackConfig(
+          options: VideoPlayerConfiguration(
+            videoSourceConfiguration: VideoSourceConfiguration(
               videoUrl: Uri.parse(
                 'https://www.youtube.com/watch?v=Cp4RRAEgpeU',
               ),
               videoSourceType: VideoSourceType.youtube,
             ),
-            customWidgets: CustomWidgets().copyWith(
+            customPlayerWidgets: CustomPlayerWidgets().copyWith(
               loadingWidget: CircularProgressIndicator(color: Colors.white),
               thumbnailFit: BoxFit.contain,
             ),
-            uiOptions: VideoPlayerUIOptions(
+            playerUIVisibilityOptions: PlayerUIVisibilityOptions(
               showLiveIndicator: true,
               showFullScreenButton: true,
               showGradientBottomControl: true,
               useSafeAreaForBottomControls: true,
             ),
             liveLabel: 'LIVE SANTA CLAUS VILLAGE',
-            playerTheme: PlayerThemeData().copyWith(
-              liveIndicatorColor: Colors.white,
-              backgroundOverlayColor: Colors.black,
-              backgroundOverlayAlpha: 100,
+            playerTheme: UniversalVideoPlayerThemeData().copyWith(
+              colors: VideoPlayerColorScheme().copyWith(
+                liveIndicator: Colors.white,
+              ),
+              overlays: VideoPlayerOverlayTheme().copyWith(
+                backgroundColor: Colors.black,
+                alpha: 100,
+              ),
             ),
           ),
         ),

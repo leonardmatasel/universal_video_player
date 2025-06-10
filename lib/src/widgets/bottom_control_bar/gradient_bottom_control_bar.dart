@@ -52,7 +52,9 @@ class GradientBottomControlBar extends StatelessWidget {
           decoration:
               showGradientBottomControl
                   ? BoxDecoration(
-                    borderRadius: BorderRadius.circular(theme.borderRadius),
+                    borderRadius: BorderRadius.circular(
+                      theme.shapes.borderRadius,
+                    ),
                     gradient: LinearGradient(
                       colors: [
                         Colors.black.withValues(alpha: 0.7),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:universal_video_player/src/navigation/route_aware_listener.dart';
 import 'package:universal_video_player/universal_video_player/controllers/universal_playback_controller.dart';
 import 'package:universal_video_player/universal_video_player/models/video_player_callbacks.dart';
-import 'package:universal_video_player/universal_video_player/models/video_player_options.dart';
+import 'package:universal_video_player/universal_video_player/models/video_player_configuration.dart';
 
 /// A widget that manages automatic show/hide behavior of video playback controls.
 ///
@@ -54,7 +54,7 @@ class AutoHideControlsManager extends StatefulWidget {
   final UniversalPlaybackController controller;
 
   /// Video player options used to customize behavior.
-  final VideoPlayerOptions options;
+  final VideoPlayerConfiguration options;
 
   /// Callback hooks for video player events.
   final VideoPlayerCallbacks callbacks;

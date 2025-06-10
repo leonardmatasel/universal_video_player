@@ -4,7 +4,7 @@ import 'package:universal_video_player/src/video_player_initializer/video_player
 import 'package:universal_video_player/src/widgets/video_player_renderer.dart';
 import 'package:universal_video_player/universal_video_player/controllers/global_playback_controller.dart';
 import 'package:universal_video_player/universal_video_player/models/video_player_callbacks.dart';
-import 'package:universal_video_player/universal_video_player/models/video_player_options.dart';
+import 'package:universal_video_player/universal_video_player/models/video_player_configuration.dart';
 import 'package:universal_video_player/universal_video_player/theme/universal_video_player_theme.dart';
 
 /// A universal and configurable video player widget supporting multiple video sources.
@@ -55,7 +55,7 @@ class UniversalVideoPlayer extends StatelessWidget {
   });
 
   /// The playback configuration and source definition.
-  final VideoPlayerOptions options;
+  final VideoPlayerConfiguration options;
 
   /// Callback hooks for reacting to controller state changes and events.
   final VideoPlayerCallbacks callbacks;
@@ -63,7 +63,7 @@ class UniversalVideoPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final globalController =
-        options.globalBehavior.useGlobalPlaybackController
+        options.globalPlaybackControlSettings.useGlobalPlaybackController
             ? context.watch<GlobalPlaybackController>()
             : null;
 
@@ -79,13 +79,14 @@ class UniversalVideoPlayer extends StatelessWidget {
               alignment: Alignment.center,
               child: Stack(
                 children: [
-                  if (options.uiOptions.showLoadingWidget &&
+                  if (options.playerUIVisibilityOptions.showLoadingWidget &&
                       !controller.isReady)
-                    Center(child: options.customWidgets.loadingWidget),
+                    Center(child: options.customPlayerWidgets.loadingWidget),
                   VideoPlayerRenderer(
                     options: options.copyWith(
-                      customWidgets: options.customWidgets.copyWith(
-                        thumbnail: options.customWidgets.thumbnail ?? thumbnail,
+                      customPlayerWidgets: options.customPlayerWidgets.copyWith(
+                        thumbnail:
+                            options.customPlayerWidgets.thumbnail ?? thumbnail,
                       ),
                     ),
                     callbacks: callbacks,

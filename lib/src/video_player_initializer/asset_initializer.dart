@@ -5,7 +5,7 @@ import 'package:universal_video_player/universal_video_player.dart';
 import 'package:video_player/video_player.dart' show VideoPlayer;
 
 class AssetInitializer implements IVideoPlayerInitializerStrategy {
-  final VideoPlayerOptions options;
+  final VideoPlayerConfiguration options;
   final VideoPlayerCallbacks callbacks;
   final GlobalPlaybackController? globalController;
   final void Function()? onErrorCallback;
@@ -20,20 +20,20 @@ class AssetInitializer implements IVideoPlayerInitializerStrategy {
   @override
   Future<UniversalPlaybackController?> initialize() async {
     print(
-      "AssetInitializer ${options.playbackConfig.videoSourceType} ${options.playbackConfig.videoDataSource}",
+      "AssetInitializer ${options.videoSourceConfiguration.videoSourceType} ${options.videoSourceConfiguration.videoDataSource}",
     );
     try {
       final controller = await DefaultPlaybackController.create(
         videoUrl: null,
-        dataSource: options.playbackConfig.videoDataSource!,
+        dataSource: options.videoSourceConfiguration.videoDataSource!,
         audioUrl: null,
         isLive: false,
         globalController: globalController,
-        initialPosition: options.playbackConfig.initialPosition,
-        initialVolume: options.playbackConfig.initialVolume,
-        autoPlay: options.playbackConfig.autoPlay,
+        initialPosition: options.videoSourceConfiguration.initialPosition,
+        initialVolume: options.videoSourceConfiguration.initialVolume,
+        autoPlay: options.videoSourceConfiguration.autoPlay,
         callbacks: callbacks,
-        type: options.playbackConfig.videoSourceType,
+        type: options.videoSourceConfiguration.videoSourceType,
       );
 
       controller.sharedPlayerNotifier.value = Hero(

@@ -6,7 +6,8 @@ import 'package:universal_video_player/src/widgets/player/video_player_thumbnail
 import 'package:universal_video_player/src/widgets/video_overlay_controls.dart';
 import 'package:universal_video_player/universal_video_player/controllers/universal_playback_controller.dart';
 import 'package:universal_video_player/universal_video_player/models/video_player_callbacks.dart';
-import 'package:universal_video_player/universal_video_player/models/video_player_options.dart';
+import 'package:universal_video_player/universal_video_player/models/video_player_configuration.dart';
+import 'package:universal_video_player/universal_video_player/theme/universal_video_player_theme.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 /// A comprehensive video player widget that manages video rendering,
@@ -23,7 +24,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 /// full-featured video playback with smooth transitions and state management.
 class VideoPlayerRenderer extends StatefulWidget {
   /// Configuration options for the video player (theme, thumbnail, behavior).
-  final VideoPlayerOptions options;
+  final VideoPlayerConfiguration options;
 
   /// Callback handlers for video player events.
   final VideoPlayerCallbacks callbacks;
@@ -45,6 +46,8 @@ class VideoPlayerRenderer extends StatefulWidget {
 class VideoPlayerRendererState extends State<VideoPlayerRenderer> {
   @override
   Widget build(BuildContext context) {
+    final theme = UniversalVideoPlayerTheme.of(context)!;
+
     return VideoOverlayControls(
       controller: widget.controller,
       options: widget.options,
@@ -52,41 +55,39 @@ class VideoPlayerRendererState extends State<VideoPlayerRenderer> {
       child: Stack(
         children: [
           // Blurred circular background overlay
-          if (widget.options.playerTheme.backgroundOverlayColor != null &&
-              widget.options.playerTheme.backgroundOverlayAlpha != null)
+          if (theme.overlays.backgroundColor != null &&
+              theme.overlays.alpha != null)
             Positioned.fill(
               child:
                   widget.options.enableBackgroundOverlayClip == true
                       ? ClipRRect(
                         borderRadius: BorderRadius.circular(
-                          widget.options.playerTheme.borderRadius,
+                          theme.shapes.borderRadius,
                         ),
                         child: MovingBlurredCircleBackground(
                           color:
                               widget
                                   .options
                                   .playerTheme
-                                  .backgroundOverlayColor!,
-                          alpha:
-                              widget
-                                  .options
-                                  .playerTheme
-                                  .backgroundOverlayAlpha!,
+                                  .overlays
+                                  .backgroundColor!,
+                          alpha: theme.overlays.alpha!,
                         ),
                       )
                       : MovingBlurredCircleBackground(
                         color:
-                            widget.options.playerTheme.backgroundOverlayColor!,
-                        alpha:
-                            widget.options.playerTheme.backgroundOverlayAlpha!,
+                            widget
+                                .options
+                                .playerTheme
+                                .overlays
+                                .backgroundColor!,
+                        alpha: theme.overlays.alpha!,
                       ),
             ),
           // Video player with fade transition and visibility detection
           Positioned.fill(
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(
-                widget.options.playerTheme.borderRadius,
-              ),
+              borderRadius: BorderRadius.circular(theme.shapes.borderRadius),
               child: FadeOverlaySwitcher(
                 duration: const Duration(milliseconds: 400),
                 child: VisibilityDetector(
@@ -113,19 +114,16 @@ class VideoPlayerRendererState extends State<VideoPlayerRenderer> {
             ),
           ),
           // Conditionally show thumbnail preview at start or end of playback
-          if (widget.options.customWidgets.thumbnail != null &&
-              widget.options.uiOptions.showThumbnailAtStart &&
+          if (widget.options.customPlayerWidgets.thumbnail != null &&
+              widget.options.playerUIVisibilityOptions.showThumbnailAtStart &&
               !widget.controller.hasStarted)
             Positioned.fill(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  widget.options.playerTheme.borderRadius,
-                ),
+                borderRadius: BorderRadius.circular(theme.shapes.borderRadius),
                 child: VideoPlayerThumbnailPreview(
-                  imageProvider: widget.options.customWidgets.thumbnail!,
-                  fit: widget.options.customWidgets.thumbnailFit,
-                  backgroundColor:
-                      widget.options.playerTheme.backgroundThumbnailColor,
+                  imageProvider: widget.options.customPlayerWidgets.thumbnail!,
+                  fit: widget.options.customPlayerWidgets.thumbnailFit,
+                  backgroundColor: theme.colors.backgroundThumbnail,
                 ),
               ),
             ),

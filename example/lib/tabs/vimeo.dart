@@ -32,22 +32,25 @@ class _VimeoState extends State<Vimeo> {
               print('UNIVERSAL PLAYER: Seek ended at: $position');
             },
           ),
-          options: VideoPlayerOptions(
-            playbackConfig: PlaybackConfig(
+          options: VideoPlayerConfiguration(
+            videoSourceConfiguration: VideoSourceConfiguration(
               videoId: '1017406920',
               videoSourceType: VideoSourceType.vimeo,
             ),
-            uiOptions: VideoPlayerUIOptions(useSafeAreaForBottomControls: true),
-            globalBehavior: GlobalPlaybackBehavior().copyWith(
-              useGlobalPlaybackController: true,
+            playerUIVisibilityOptions: PlayerUIVisibilityOptions(
+              useSafeAreaForBottomControls: true,
             ),
-            customWidgets: CustomWidgets().copyWith(
+            globalPlaybackControlSettings: GlobalPlaybackControlSettings()
+                .copyWith(useGlobalPlaybackController: true),
+            customPlayerWidgets: CustomPlayerWidgets().copyWith(
               loadingWidget: CircularProgressIndicator(color: Colors.red),
             ),
-            playerTheme: PlayerThemeData().copyWith(
-              backgroundOverlayColor: Colors.white,
-              backgroundOverlayAlpha: 100,
-              borderRadius: 0,
+            playerTheme: UniversalVideoPlayerThemeData().copyWith(
+              overlays: VideoPlayerOverlayTheme().copyWith(
+                backgroundColor: Colors.white,
+                alpha: 100,
+              ),
+              shapes: VideoPlayerShapeTheme().copyWith(borderRadius: 0),
             ),
           ),
         ),

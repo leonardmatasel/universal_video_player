@@ -6,7 +6,7 @@ import 'package:universal_video_player/src/widgets/player/vimeo_player.dart';
 import 'package:universal_video_player/universal_video_player.dart';
 
 class VimeoInitializer implements IVideoPlayerInitializerStrategy {
-  final VideoPlayerOptions options;
+  final VideoPlayerConfiguration options;
   final VideoPlayerCallbacks callbacks;
   final GlobalPlaybackController? globalController;
   final void Function() onErrorCallback;
@@ -20,7 +20,7 @@ class VimeoInitializer implements IVideoPlayerInitializerStrategy {
 
   @override
   Future<UniversalPlaybackController?> initialize() async {
-    final videoId = options.playbackConfig.videoId!;
+    final videoId = options.videoSourceConfiguration.videoId!;
     final vimeoVideoInfo = await VimeoVideoApi.fetchVimeoVideoInfo(videoId);
 
     if (vimeoVideoInfo == null) {
@@ -30,9 +30,9 @@ class VimeoInitializer implements IVideoPlayerInitializerStrategy {
     final controller = VimeoPlaybackController.create(
       videoId: videoId,
       globalController: globalController,
-      initialPosition: options.playbackConfig.initialPosition,
-      initialVolume: options.playbackConfig.initialVolume,
-      autoPlay: options.playbackConfig.autoPlay,
+      initialPosition: options.videoSourceConfiguration.initialPosition,
+      initialVolume: options.videoSourceConfiguration.initialVolume,
+      autoPlay: options.videoSourceConfiguration.autoPlay,
       duration: vimeoVideoInfo.duration,
       size: Size(
         vimeoVideoInfo.width.toDouble(),

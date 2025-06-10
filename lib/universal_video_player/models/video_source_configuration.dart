@@ -3,17 +3,17 @@ import 'package:universal_video_player/universal_video_player/models/video_sourc
 
 /// Configuration object used to initialize video playback.
 ///
-/// Depending on the [videoSourceType], provide:
+/// Depending on the [videoSourceType], provide exactly one of:
 ///
 /// - [videoUrl] → for YouTube or network videos.
-/// - [videoId] → for Vimeo.
-/// - [videoDataSource] → for asset or local file.
+/// - [videoId] → for Vimeo videos.
+/// - [videoDataSource] → for asset or local file videos.
 ///
 /// ⚠️ **Rules:**
-/// - Provide **only one** among [videoUrl], [videoId], or [videoDataSource].
-/// - `videoId` is only for Vimeo.
-/// - `videoUrl` is for YouTube or network streams.
-/// - `videoDataSource` is for assets or local files.
+/// - Provide **only one** of [videoUrl], [videoId], or [videoDataSource].
+/// - [videoId] is only valid for Vimeo.
+/// - [videoUrl] is valid for YouTube and network streams.
+/// - [videoDataSource] is valid for assets or local files.
 ///
 /// ---
 ///
@@ -21,7 +21,7 @@ import 'package:universal_video_player/universal_video_player/models/video_sourc
 ///
 /// **Vimeo**
 /// ```dart
-/// PlaybackConfig(
+/// VideoSourceConfiguration(
 ///   videoId: "123456789",
 ///   videoSourceType: VideoSourceType.vimeo,
 /// )
@@ -29,7 +29,7 @@ import 'package:universal_video_player/universal_video_player/models/video_sourc
 ///
 /// **YouTube**
 /// ```dart
-/// PlaybackConfig(
+/// VideoSourceConfiguration(
 ///   videoUrl: Uri.parse("https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
 ///   videoSourceType: VideoSourceType.youtube,
 /// )
@@ -37,7 +37,7 @@ import 'package:universal_video_player/universal_video_player/models/video_sourc
 ///
 /// **Network**
 /// ```dart
-/// PlaybackConfig(
+/// VideoSourceConfiguration(
 ///   videoUrl: Uri.parse("https://example.com/video.mp4"),
 ///   videoSourceType: VideoSourceType.network,
 /// )
@@ -45,47 +45,48 @@ import 'package:universal_video_player/universal_video_player/models/video_sourc
 ///
 /// **Asset**
 /// ```dart
-/// PlaybackConfig(
+/// VideoSourceConfiguration(
 ///   videoDataSource: 'assets/videos/video.mp4',
 ///   videoSourceType: VideoSourceType.asset,
 /// )
 /// ```
 @immutable
-class PlaybackConfig {
+class VideoSourceConfiguration {
   /// The video URL (for YouTube or network-based videos).
   final Uri? videoUrl;
 
-  /// The video ID (for Vimeo).
+  /// The video ID (only for Vimeo videos).
   final String? videoId;
 
-  /// The asset or file path.
+  /// The asset or file path (for asset or local file videos).
   final String? videoDataSource;
 
-  /// Defines the source type.
+  /// Defines the source type, must match the appropriate data source field.
   final VideoSourceType videoSourceType;
 
-  /// Whether playback should auto-start.
+  /// Whether playback should start automatically.
   final bool autoPlay;
 
-  /// Start position.
+  /// The initial playback position.
   final Duration initialPosition;
 
-  /// Initial volume (0.0 to 1.0).
+  /// Initial volume level (range 0.0 to 1.0).
   final double initialVolume;
 
-  /// Whether to start playback muted.
+  /// Whether playback should start muted.
   final bool autoMuteOnStart;
 
-  /// Preferred quality levels.
+  /// Preferred video quality levels in order of preference.
   final List<int> preferredQualities;
 
-  /// Whether user can seek.
+  /// Whether the user is allowed to seek the video.
   final bool allowSeeking;
 
-  /// Max wait time before considering playback failed.
+  /// Maximum wait time before considering playback failed.
   final Duration timeoutDuration;
 
-  PlaybackConfig({
+  /// Creates a new video source configuration with validation based on source type.
+  VideoSourceConfiguration({
     this.videoUrl,
     this.videoId,
     this.videoDataSource,
@@ -99,13 +100,14 @@ class PlaybackConfig {
     this.timeoutDuration = const Duration(seconds: 30),
   }) : assert(
          _validateSource(videoUrl, videoId, videoDataSource, videoSourceType),
-         'Invalid config:\n'
-         '- Vimeo → use videoId\n'
-         '- YouTube / Network → use videoUrl\n'
-         '- Asset / File → use videoDataSource\n'
-         'Provide only the appropriate field for the selected source type.',
+         'Invalid configuration:\n'
+         '- Vimeo → use videoId only\n'
+         '- YouTube / Network → use videoUrl only\n'
+         '- Asset / File → use videoDataSource only\n'
+         'Please provide only the appropriate field for the selected source type.',
        );
 
+  /// Internal helper to validate that only the correct data source field is set.
   static bool _validateSource(
     Uri? url,
     String? id,
@@ -123,7 +125,10 @@ class PlaybackConfig {
     }
   }
 
-  PlaybackConfig copyWith({
+  /// Returns a new instance of [VideoSourceConfiguration] with updated fields.
+  ///
+  /// All parameters are optional and default to current instance values if null.
+  VideoSourceConfiguration copyWith({
     Uri? videoUrl,
     String? videoId,
     String? videoDataSource,
@@ -136,7 +141,7 @@ class PlaybackConfig {
     bool? allowSeeking,
     Duration? timeoutDuration,
   }) {
-    return PlaybackConfig(
+    return VideoSourceConfiguration(
       videoUrl: videoUrl ?? this.videoUrl,
       videoId: videoId ?? this.videoId,
       videoDataSource: videoDataSource ?? this.videoDataSource,

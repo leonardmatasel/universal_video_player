@@ -5,14 +5,14 @@ import 'package:universal_video_player/src/widgets/controls/fullscreen_toggle_bu
 import 'package:universal_video_player/src/widgets/player/fullscreen_video_player.dart';
 import 'package:universal_video_player/universal_video_player/controllers/universal_playback_controller.dart';
 import 'package:universal_video_player/universal_video_player/models/video_player_callbacks.dart';
-import 'package:universal_video_player/universal_video_player/models/video_player_options.dart';
+import 'package:universal_video_player/universal_video_player/models/video_player_configuration.dart';
 import 'package:universal_video_player/universal_video_player/theme/universal_video_player_theme.dart';
 
 /// A widget that displays the bottom bar of video player controls.
 ///
 /// [VideoPlaybackControlBar] includes mute/unmute button, seek bar,
 /// and full screen toggle button. It connects with the provided
-/// [UniversalPlaybackController], [VideoPlayerOptions], and [VideoPlayerCallbacks]
+/// [UniversalPlaybackController], [VideoPlayerConfiguration], and [VideoPlayerCallbacks]
 /// to handle user interactions and playback configuration.
 ///
 /// This widget is typically used as part of a video player UI.
@@ -29,7 +29,7 @@ class VideoPlaybackControlBar extends StatelessWidget {
   final UniversalPlaybackController controller;
 
   /// Configuration options that define how the controls behave and appear.
-  final VideoPlayerOptions options;
+  final VideoPlayerConfiguration options;
 
   /// Callbacks to handle user interactions like mute and fullscreen toggle.
   final VideoPlayerCallbacks callbacks;
@@ -38,32 +38,37 @@ class VideoPlaybackControlBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (options.uiOptions.showMuteUnMuteButton)
+        if (options.playerUIVisibilityOptions.showMuteUnMuteButton)
           AudioToggleButton(
             controller: controller,
             onAudioToggled: callbacks.onMuteToggled,
           ),
-        ...options.customWidgets.leadingBottomButtons,
+        ...options.customPlayerWidgets.leadingBottomButtons,
         Expanded(
           child: VideoSeekBar(
             onSeekStart: callbacks.onSeekStart,
             controller: controller,
             liveLabel: options.liveLabel,
-            showCurrentTime: options.uiOptions.showCurrentTime,
-            showDurationTime: options.uiOptions.showDurationTime,
-            showRemainingTime: options.uiOptions.showRemainingTime,
-            customSeekBar: options.customWidgets.customSeekBar,
-            showLiveIndicator: options.uiOptions.showLiveIndicator,
-            showSeekBar: options.uiOptions.showSeekBar,
-            customTimeDisplay: options.customWidgets.customDurationDisplay,
-            allowSeeking: options.playbackConfig.allowSeeking,
-            customDurationDisplay: options.customWidgets.customDurationDisplay,
+            showCurrentTime: options.playerUIVisibilityOptions.showCurrentTime,
+            showDurationTime:
+                options.playerUIVisibilityOptions.showDurationTime,
+            showRemainingTime:
+                options.playerUIVisibilityOptions.showRemainingTime,
+            customSeekBar: options.customPlayerWidgets.customSeekBar,
+            showLiveIndicator:
+                options.playerUIVisibilityOptions.showLiveIndicator,
+            showSeekBar: options.playerUIVisibilityOptions.showSeekBar,
+            customTimeDisplay:
+                options.customPlayerWidgets.customDurationDisplay,
+            allowSeeking: options.videoSourceConfiguration.allowSeeking,
+            customDurationDisplay:
+                options.customPlayerWidgets.customDurationDisplay,
             customRemainingTimeDisplay:
-                options.customWidgets.customRemainingTimeDisplay,
+                options.customPlayerWidgets.customRemainingTimeDisplay,
           ),
         ),
-        ...options.customWidgets.trailingBottomButtons,
-        if (options.uiOptions.showFullScreenButton)
+        ...options.customPlayerWidgets.trailingBottomButtons,
+        if (options.playerUIVisibilityOptions.showFullScreenButton)
           FullscreenToggleButton(
             controller: controller,
             fullscreenPageBuilder:

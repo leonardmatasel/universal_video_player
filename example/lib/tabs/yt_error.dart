@@ -9,13 +9,15 @@ class YTError extends StatelessWidget {
     return Center(
       child: UniversalVideoPlayer(
         callbacks: VideoPlayerCallbacks(),
-        options: VideoPlayerOptions(
-          playbackConfig: PlaybackConfig(
+        options: VideoPlayerConfiguration(
+          videoSourceConfiguration: VideoSourceConfiguration(
             videoUrl: Uri.parse('https://www.youtube.com/watch?v=ysz5S6PUM-U'),
             videoSourceType: VideoSourceType.youtube,
           ),
-          playerTheme: PlayerThemeData().copyWith(
-            backgroundErrorColor: Colors.amber,
+          playerTheme: UniversalVideoPlayerThemeData().copyWith(
+            colors: VideoPlayerColorScheme().copyWith(
+              backgroundError: Colors.amber,
+            ),
           ),
         ),
       ),

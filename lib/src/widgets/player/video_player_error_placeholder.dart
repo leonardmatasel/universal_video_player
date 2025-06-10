@@ -37,18 +37,18 @@ class VideoPlayerErrorPlaceholder extends StatelessWidget {
     final theme = UniversalVideoPlayerTheme.of(context)!;
 
     return Container(
-      color: theme.backgroundErrorColor,
+      color: theme.colors.backgroundError,
       width: double.infinity,
       height: double.infinity,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(theme.icons.error, color: theme.textErrorColor, size: 42),
+            Icon(theme.icons.error, color: theme.colors.textError, size: 42),
             const SizedBox(height: 16),
             Text(
-              theme.errorMessage,
-              style: TextStyle(color: theme.textErrorColor),
+              theme.labels.errorMessage,
+              style: TextStyle(color: theme.colors.textError),
               textAlign: TextAlign.center,
             ),
             if (videoUrlToOpenExternally != null)
@@ -74,7 +74,7 @@ class VideoPlayerErrorPlaceholder extends StatelessWidget {
                       }
                     }
                   },
-                  child: Text(theme.openExternalPlayerLabel),
+                  child: Text(theme.labels.openExternalLabel),
                 ),
               ),
             if (showRefreshButton != null)
@@ -84,7 +84,7 @@ class VideoPlayerErrorPlaceholder extends StatelessWidget {
                   onPressed: () async {
                     playerGlobalKey.currentState?.refresh();
                   },
-                  child: Text(theme.refreshPlayerLabel),
+                  child: Text(theme.labels.refreshLabel),
                 ),
               ),
           ],

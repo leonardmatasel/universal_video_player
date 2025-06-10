@@ -7,7 +7,7 @@ import 'package:universal_video_player/src/video_player_initializer/youtube_init
 import 'package:universal_video_player/universal_video_player/controllers/global_playback_controller.dart';
 import 'package:universal_video_player/universal_video_player/controllers/universal_playback_controller.dart';
 import 'package:universal_video_player/universal_video_player/models/video_player_callbacks.dart';
-import 'package:universal_video_player/universal_video_player/models/video_player_options.dart';
+import 'package:universal_video_player/universal_video_player/models/video_player_configuration.dart';
 import 'package:universal_video_player/universal_video_player/models/video_source_type.dart';
 
 abstract class IVideoPlayerInitializerStrategy {
@@ -17,7 +17,7 @@ abstract class IVideoPlayerInitializerStrategy {
 class VideoPlayerInitializerFactory {
   static IVideoPlayerInitializerStrategy getStrategy(
     VideoSourceType sourceType,
-    VideoPlayerOptions options,
+    VideoPlayerConfiguration options,
     VideoPlayerCallbacks callbacks,
     GlobalPlaybackController? globalController,
     VoidCallback onErrorCallback,

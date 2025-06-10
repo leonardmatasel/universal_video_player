@@ -3,16 +3,35 @@ import 'package:universal_video_player/universal_video_player.dart';
 
 import 'video_control_icon_button.dart';
 
-/// A button to toggle full-screen mode for a video player.
+/// A toggle button to enter or exit full-screen mode in a video player.
 ///
-/// [FullscreenToggleButton] switches between full-screen and normal modes
-/// using a [UniversalPlaybackController]. It updates the icon based on the current state
-/// and navigates to the provided [fullscreenPageBuilder] when entering full-screen.
+/// The [FullscreenToggleButton] uses a [UniversalPlaybackController] to manage
+/// full-screen transitions. It dynamically updates its icon to reflect the
+/// current full-screen state. When pressed, it either navigates to a custom
+/// full-screen page or exits full-screen mode, depending on the current state.
 ///
-/// The [onFullscreenToggled] callback is called with `true` when entering full-screen
-/// and `false` when exiting.
+/// The [fullscreenPageBuilder] is called to build the full-screen view when
+/// entering full-screen mode. The [onFullscreenToggled] callback can be used
+/// to listen for changes in the full-screen state.
+///
+/// {@tool snippet}
+/// Example usage:
+/// ```dart
+/// FullscreenToggleButton(
+///   controller: myPlaybackController,
+///   fullscreenPageBuilder: (context) => FullscreenVideoPage(),
+///   onFullscreenToggled: (isFullscreen) {
+///     print('Is fullscreen: $isFullscreen');
+///   },
+/// )
+/// ```
+/// {@end-tool}
 class FullscreenToggleButton extends StatelessWidget {
-  /// Creates a fullscreen toggle button.
+  /// Creates a [FullscreenToggleButton].
+  ///
+  /// Requires a [controller] to manage the full-screen state,
+  /// a [fullscreenPageBuilder] to build the full-screen UI,
+  /// and an optional [onFullscreenToggled] callback.
   const FullscreenToggleButton({
     super.key,
     required this.controller,
@@ -20,13 +39,16 @@ class FullscreenToggleButton extends StatelessWidget {
     required this.onFullscreenToggled,
   });
 
-  /// The media playback controller that manages fullscreen state.
+  /// The controller that manages the full-screen state and transitions.
   final UniversalPlaybackController controller;
 
-  /// A callback to notify when fullscreen mode is toggled.
+  /// Callback invoked when the full-screen state changes.
+  ///
+  /// Receives `true` when entering full-screen mode,
+  /// and `false` when exiting.
   final void Function(bool isEnteringFullscreen)? onFullscreenToggled;
 
-  /// A builder for the fullscreen player page.
+  /// Builder function that returns the widget to show in full-screen mode.
   final Widget Function(BuildContext context) fullscreenPageBuilder;
 
   @override
