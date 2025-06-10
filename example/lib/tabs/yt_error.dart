@@ -1,0 +1,24 @@
+import 'package:flutter/material.dart';
+import 'package:universal_video_player/universal_video_player.dart';
+
+class YTError extends StatelessWidget {
+  const YTError({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: UniversalVideoPlayer(
+        callbacks: VideoPlayerCallbacks(),
+        options: VideoPlayerOptions(
+          playbackConfig: PlaybackConfig(
+            videoUrl: Uri.parse('https://www.youtube.com/watch?v=ysz5S6PUM-U'),
+            videoSourceType: VideoSourceType.youtube,
+          ),
+          playerTheme: PlayerThemeData().copyWith(
+            backgroundErrorColor: Colors.amber,
+          ),
+        ),
+      ),
+    );
+  }
+}
