@@ -1,10 +1,10 @@
 
 <h1 align="center">
-  <img src="https://user-images.githubusercontent.com/85326522/159757765-db86f850-fea8-4dc2-bd86-0a27648b24e5.png" alt="universal_video_player" width="200"/>
+  <img src="https://github.com/leonardmatasel/universal_video_player/blob/main/example/assets/logo_horizontal.png?raw=true" alt="universal_video_player" height="125"/>
 </h1>
 
 <p align="center">
-  <strong>Universal video player for Flutter – supporting YouTube, Vimeo, network streams, assets, and local files.</strong>
+  <strong>All-in-one Flutter video player – stream from YouTube, Vimeo, network, assets files</strong>
 </p>
 
 <p align="center">
@@ -19,24 +19,38 @@
   </a>
 </p>
 
----
 
-## ✅ Supported Video Types by Platform
+## Introduction
 
-| Video Source Type | Android | iOS | Web  |
-|-------------------|---------|-----|------|
-| YouTube           |   ✅    |  ✅  |  ❌   |
-| Vimeo             |   ✅    |  ✅  |  ❌   |
-| Network           |   ✅    |  ✅  |  ✅   |
-| Asset             |   ✅    |  ✅  |  ✅   |
+**universal_video_player** is a Flutter video player built on top of Flutter’s official `video_player` plugin. It supports YouTube (via `youtube_explode_dart`), network and asset videos.
 
----
+🎨 Highly customizable — tweak UI, show/hide controls, and easily integrate your own widgets.  
+🎮 The controller gives full control over video state and callbacks for smooth video management on mobile and web.
+
+🎯 **Long-term goal:** to create a universal, flexible, and feature-rich video player that works flawlessly across all platforms and video sources, empowering developers with maximum control and customization options.
+
+<br>
+
+## Supported Platforms & Status
+
+| Video Source Type | Android | iOS  |  Web  | Status        |
+|-------------------|---------|------|-------|---------------|
+| YouTube           |   ✅    |  ✅  |  ❌   | ✅ Supported  |
+| Vimeo             |   ✅    |  ✅  |  ❌   | ✅ Supported  |
+| Network           |   ✅    |  ✅  |  ✅   | ✅ Supported  |
+| Asset             |   ✅    |  ✅  |  ✅   | ✅ Supported  |
+| Twitch            |   -    |  -   |   -   | 🔜 Planned    |
+| TikTok            |   -    |  -   |   -   | 🔜 Planned    |
+| Dailymotion       |   -    |  -   |   -   | 🔜 Planned    |
+
+
+<br>
 
 ## ✨ Features
 
 - ✅ Play videos from:
   - YouTube (support for live and regular videos)
-  - Vimeo (public, private, and hashed videos)
+  - Vimeo (public)
   - Network video URLs
   - Flutter app assets
 - 🎛 Customizable player UI (controls, theme, overlays, labels)
@@ -44,47 +58,71 @@
 - ⏪ Seek bar & scrubbing
 - 🖼 Thumbnail support (custom or auto-generated for YouTube and Vimeo)
 - 🔊 Global playback & mute sync across players
-- ⛶ Native fullscreen player
+- ⛶ Fullscreen player
 - ⚙️ Custom error and loading widgets
 
----
+<br>
 
 ## 🧪 Demo
 
-![](https://github.com/leonardmatasel/universal_video_player/blob/main/example/assets/showcase.gif?raw=true) 
+<p align="center">
+  <img src="https://github.com/leonardmatasel/universal_video_player/blob/main/example/assets/showcase.gif?raw=true" width="300"/>
+</p>
 
 ## 🚀 Getting Started
 
 ### Installation
+
+Check the latest version on: [![Pub Version](https://img.shields.io/pub/v/universal_video_player.svg)](https://pub.dev/packages/universal_video_player)
 
 ```yaml
 dependencies:
   universal_video_player: <latest_version>
 ````
 
+
 ---
 
-### Android Setup
+### 🛠️ Android Setup
+
+In your Flutter project, open:
+
+```
+android/app/src/main/AndroidManifest.xml
+```
 
 ```xml
-<!-- AndroidManifest.xml -->
+<!-- Add inside <manifest> -->
 <uses-permission android:name="android.permission.INTERNET"/>
-<application android:usesCleartextTraffic="true">
+
+<!-- Add inside <application> -->
+<application
+    android:usesCleartextTraffic="true"
+    ... >
 </application>
 ```
 
+✅ The `INTERNET` permission is required for streaming videos.
+
+
+⚠️ The `usesCleartextTraffic="true"` is only needed if you're using HTTP (not HTTPS) URLs.
+
 ---
 
-### iOS Setup
+### 🍎 iOS Setup
+
+To allow video streaming over HTTP (especially for development or non-HTTPS sources), add the following to your `Info.plist` file:
 
 ```xml
-<!-- Info.plist -->
+<!-- ios/Runner/Info.plist -->
 <key>NSAppTransportSecurity</key>
 <dict>
   <key>NSAllowsArbitraryLoads</key>
   <true/>
 </dict>
 ```
+
+<br>
 
 ## 📦 Usage Examples
 
@@ -112,29 +150,6 @@ controller = PodPlayerController(
 )..initialise();
 ```
 
-### Vimeo with Hash
-
-```dart
-controller = PodPlayerController(
-  playVideoFrom: PlayVideoFrom.vimeo('518228118', hash: '7cc595e1f8'),
-)..initialise();
-```
-
-### Vimeo Private Video
-
-```dart
-final headers = {'Authorization': 'Bearer YOUR_TOKEN'};
-
-controller = PodPlayerController(
-  playVideoFrom: PlayVideoFrom.vimeoPrivateVideos(
-    'YOUR_VIDEO_ID',
-    httpHeaders: headers,
-  ),
-)..initialise();
-```
-
----
-
 ### With Custom Config
 
 ```dart
@@ -148,134 +163,59 @@ controller = PodPlayerController(
 )..initialise();
 ```
 
----
+<br>
 
-### Add Thumbnail
+## 🎯 Advanced Sync with `AnimatedBuilder`
 
-```dart
-PodVideoPlayer(
-  controller: controller,
-  videoThumbnail: DecorationImage(
-    image: NetworkImage('https://example.com/thumbnail.jpg'),
-    fit: BoxFit.cover,
-  ),
-)
-```
-
----
-
-### Custom Labels
-
-```dart
-PodVideoPlayer(
-  controller: controller,
-  podPlayerLabels: const PodPlayerLabels(
-    play: "Play video",
-    pause: "Pause video",
-    mute: "Silence",
-    unMute: "Unmute",
-  ),
-)
-```
-
----
-
-## 🎯 Advanced Integration with AnimatedBuilder
-
-To ensure full sync with internal state updates like `isFullScreen`, use:
+If your UI does not automatically reflect changes to the controller's state (e.g. `isFullScreen`, widget updates), you can manually force re-rendering using `AnimatedBuilder`:
 
 ```dart
 AnimatedBuilder(
   animation: Listenable.merge([
-    controller,
-    controller.sharedPlayerNotifier,
+    controller, // listens to general controller changes
+    controller.sharedPlayerNotifier, // listens to widget updates
   ]),
   builder: (context, _) {
     final player = controller.sharedPlayerNotifier.value;
     final shouldRender = isFullScreenDisplay == controller.isFullScreen;
 
-    return Center(
-      child: AspectRatio(
-        aspectRatio: aspectRatio,
-        child: shouldRender ? (player ?? const SizedBox.shrink()) : const SizedBox.shrink(),
-      ),
+    return AspectRatio(
+      aspectRatio: aspectRatio,
+      child: shouldRender ? (player ?? const SizedBox.shrink()) : const SizedBox.shrink(),
     );
   },
 );
-```
+````
 
----
+> 💡 Use this only if your app UI isn’t reflecting video controller state changes properly.
+
+<br>
 
 ## 🧩 Example App
 
 Check out the full [`example/`](https://github.com/newtaDev/fl_video_player/tree/master/example) app in the repo.
 
----
+<br>
 
 ## 🔮 Future Developments
 
-### 📃 Playlist Support
+| Feature                      | Description                                                                 |
+|-----------------------------|-----------------------------------------------------------------------------|
+| 📃 Playlist Support         | YouTube playlist playback and custom video URL lists                        |
+| ⏩ Double Tap Seek           | Skip forward/backward by configurable duration                              |
+| 📚 Side Command Bars          | Left and right customizable sidebars for placing user-defined widgets or controls.           |
+| 🧭 Header Bar               | Custom header with title, channel info, and actions                         |
+| 🖼 Picture-in-Picture (PiP) | Play video in floating overlay while multitasking                           |
+| 📶 Quality Selection        | Switch between 360p, 720p, 1080p, etc. during playback                      |
+| ⏱ Playback Speed Control   | Adjust speed: 0.5x, 1.5x, 2x, etc.                                           |
+| 🔁 Looping / Repeat         | Loop a single video or an entire playlist                                   |
+| ♿ Accessibility             | Screen reader support, keyboard nav, captions, ARIA, high contrast, etc.   |
+| ⬇️ Download / Offline Mode | Save videos temporarily for offline playback                                |
+| 📺 Chromecast & AirPlay     | Stream to external devices like TVs or smart displays                       |
+| 🔒 Parental Controls        | Restrict age-inappropriate or sensitive content                             |
+| ⚙️ Settings Button          | Easily access and configure playback preferences                            |
 
-* YouTube playlist playback
-* Custom playlist of video URLs
-
-### ⏩ Double Tap Seek
-
-* Skip forward/backward by configurable duration
-
-### 🧭 Header Bar
-
-* Title, channel name, and action buttons
-
-### 🖼 Picture-in-Picture Mode (PiP)
-
-* Continue video in floating overlay window
-
-### 📶 Video Quality Selection change during playing
-
-* Let users choose between 360p, 720p, 1080p etc.
-
-### ⏱ Playback Speed Control
-
-* Change speed to 0.5x, 1.5x, 2x, etc.
-
-### 🔁 Video Looping / Repeat
-
-* Loop single video or full playlist
-
-### ♿ Accessibility Enhancements
-
-* Screen readers, keyboard navigation, ARIA, captions, high contrast, etc.
-
-### ⬇️ Download / Offline Mode
-
-* Save videos for temporary offline playback
-
-### 📺 Chromecast & AirPlay Support
-
-* Stream video to external displays
-
-### 🔒 Parental Controls
-
-* Filter sensitive or age-restricted content
-
-### ⚙️ Settings Button
-
-* Quick access to all playback preferences
-
----
-
-### 🔧 Upcoming Platform Support
-
-| Platform    | Status      |
-| ----------- | ----------- |
-| YouTube     | ✅ Supported |
-| Vimeo       | ✅ Supported  |
-| Twitch      | 🔜 Planned  |
-| TikTok      | 🔜 Planned  |
-| Dailymotion | 🔜 Planned  |
-
----
+<br>
 
 ## 📄 License
 
