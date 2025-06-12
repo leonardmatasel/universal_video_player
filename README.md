@@ -51,19 +51,7 @@
 
 ## 🧪 Demo
 
-| Vimeo Quality Switching                           | Global Player Controls                            |
-|---------------------------------------------------|---------------------------------------------------|
-| ![](https://user-images.githubusercontent.com/85326522/160657119-7295ef4e-851b-42a3-a792-856fb6045b11.gif) | ![](https://user-images.githubusercontent.com/85326522/160657075-a17876c1-680b-472d-b1b9-ab06ba315b96.gif) |
-
-- Fullscreen on mobile:
-  ![](https://user-images.githubusercontent.com/85326522/156813701-aa722624-fde3-4036-9392-a0107ee863b2.jpg)
-
-- Custom controls:
-  | Double Tap Seek                                  | Custom Progress Bar                               |
-  |--------------------------------------------------|---------------------------------------------------|
-  | ![](https://user-images.githubusercontent.com/85326522/156813691-cd75c638-a4d3-4dda-8a22-eed3e43bd299.jpg) | ![](https://user-images.githubusercontent.com/85326522/156815812-e85bd5bc-2401-42d9-a7ba-c5ad2be494fa.jpg) |
-
----
+![](https://github.com/leonardmatasel/universal_video_player/blob/main/example/assets/showcase.gif?raw=true) 
 
 ## 🚀 Getting Started
 
