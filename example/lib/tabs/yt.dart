@@ -34,7 +34,7 @@ class YT extends StatelessWidget {
             playerTheme: UniversalVideoPlayerThemeData().copyWith(
               icons: VideoPlayerIconTheme().copyWith(error: Icons.warning),
               overlays: VideoPlayerOverlayTheme().copyWith(
-                backgroundColor: Colors.black,
+                backgroundColor: Colors.white,
                 alpha: 100,
               ),
             ),

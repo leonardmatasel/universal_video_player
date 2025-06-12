@@ -1,111 +1,294 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+<h1 align="center">
+  <img src="https://user-images.githubusercontent.com/85326522/159757765-db86f850-fea8-4dc2-bd86-0a27648b24e5.png" alt="universal_video_player" width="200"/>
+</h1>
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+<p align="center">
+  <strong>Universal video player for Flutter – supporting YouTube, Vimeo, network streams, assets, and local files.</strong>
+</p>
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+<p align="center">
+  <a href="https://pub.dev/packages/universal_video_player">
+    <img src="https://img.shields.io/pub/v/universal_video_player.svg" alt="pub version">
+  </a>
+  <a href="https://pub.dev/packages/universal_video_player/score">
+    <img src="https://img.shields.io/pub/points/universal_video_player" alt="pub points">
+  </a>
+  <a href="https://pub.dev/packages/universal_video_player/score">
+    <img src="https://img.shields.io/badge/popularity-high-brightgreen" alt="pub popularity">
+  </a>
+</p>
 
-## Features
+---
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+## ✅ Supported Video Types by Platform
 
-## Getting started
+| Video Source Type | Android | iOS | Web  |
+|-------------------|---------|-----|------|
+| YouTube           |   ✅    |  ✅  |  ❌   |
+| Vimeo             |   ✅    |  ✅  |  ❌   |
+| Network           |   ✅    |  ✅  |  ✅   |
+| Asset             |   ✅    |  ✅  |  ✅   |
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+---
 
-## Usage
+## ✨ Features
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+- ✅ Play videos from:
+  - YouTube (support for live and regular videos)
+  - Vimeo (public, private, and hashed videos)
+  - Network video URLs
+  - Flutter app assets
+- 🎛 Customizable player UI (controls, theme, overlays, labels)
+- 🔁 Autoplay, replay, mute/unmute, volume control
+- ⏪ Seek bar & scrubbing
+- 🖼 Thumbnail support (custom or auto-generated for YouTube and Vimeo)
+- 🔊 Global playback & mute sync across players
+- ⛶ Native fullscreen player
+- ⚙️ Custom error and loading widgets
 
-```dart
-const like = 'sample';
+---
+
+## 🧪 Demo
+
+| Vimeo Quality Switching                           | Global Player Controls                            |
+|---------------------------------------------------|---------------------------------------------------|
+| ![](https://user-images.githubusercontent.com/85326522/160657119-7295ef4e-851b-42a3-a792-856fb6045b11.gif) | ![](https://user-images.githubusercontent.com/85326522/160657075-a17876c1-680b-472d-b1b9-ab06ba315b96.gif) |
+
+- Fullscreen on mobile:
+  ![](https://user-images.githubusercontent.com/85326522/156813701-aa722624-fde3-4036-9392-a0107ee863b2.jpg)
+
+- Custom controls:
+  | Double Tap Seek                                  | Custom Progress Bar                               |
+  |--------------------------------------------------|---------------------------------------------------|
+  | ![](https://user-images.githubusercontent.com/85326522/156813691-cd75c638-a4d3-4dda-8a22-eed3e43bd299.jpg) | ![](https://user-images.githubusercontent.com/85326522/156815812-e85bd5bc-2401-42d9-a7ba-c5ad2be494fa.jpg) |
+
+---
+
+## 🚀 Getting Started
+
+### Installation
+
+```yaml
+dependencies:
+  universal_video_player: <latest_version>
+````
+
+---
+
+### Android Setup
+
+```xml
+<!-- AndroidManifest.xml -->
+<uses-permission android:name="android.permission.INTERNET"/>
+<application android:usesCleartextTraffic="true">
+</application>
 ```
 
-## Additional information
+---
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+### iOS Setup
 
-## Future Developments
-# Playlist Support
-Support for YouTube playlists and custom playlists with a series of video URLs.
+```xml
+<!-- Info.plist -->
+<key>NSAppTransportSecurity</key>
+<dict>
+  <key>NSAllowsArbitraryLoads</key>
+  <true/>
+</dict>
+```
 
-# Double Tap Seek
-Double tap gestures to skip forward or backward by configurable seconds.
+## 📦 Usage Examples
 
-# Header Bar
-A customizable header bar to show video title, channel info, or action buttons.
+### Basic Network Video
 
-# Picture-in-Picture Mode (PiP)
-Allow the video to continue playing in a small overlay window while user navigates away.
+```dart
+controller = PodPlayerController(
+  playVideoFrom: PlayVideoFrom.network('https://example.com/video.mp4'),
+)..initialise();
+```
 
-# Video Quality Selection
-Let users switch between multiple video qualities (360p, 720p, 1080p, etc.).
+### YouTube Video
 
-# Playback Speed Control
-Allow users to adjust playback speed (0.5x, 1.5x, 2x, etc.).
+```dart
+controller = PodPlayerController(
+  playVideoFrom: PlayVideoFrom.youtube('https://youtu.be/A3ltMaM6noM'),
+)..initialise();
+```
 
-# Video Looping / Repeat
-Option to loop a video or a playlist.
+### Vimeo Video
 
-# Accessibility Enhancements
-Implement accessibility features such as keyboard navigation, screen reader support (ARIA labels), captions/subtitles, high contrast mode, and support for users with visual, auditory, or motor impairments.
+```dart
+controller = PodPlayerController(
+  playVideoFrom: PlayVideoFrom.vimeo('518228118'),
+)..initialise();
+```
 
-# Download/Offline Mode (where permitted)
-Allow users to temporarily download videos for offline viewing.
+### Vimeo with Hash
 
-# Chromecast & AirPlay Support
-Enable streaming to external devices such as Chromecast or AirPlay-enabled displays.
+```dart
+controller = PodPlayerController(
+  playVideoFrom: PlayVideoFrom.vimeo('518228118', hash: '7cc595e1f8'),
+)..initialise();
+```
 
-# Parental Control / Restrictions
-Implement filters to restrict access to sensitive or age-inappropriate content, ensuring a safer viewing experience for younger audiences.
+### Vimeo Private Video
 
-# Settings Button
-Include a dedicated settings button to allow users to easily access and customize preferences.
+```dart
+final headers = {'Authorization': 'Bearer YOUR_TOKEN'};
 
-# Support for these platforms is planned and will be added in future updates:
+controller = PodPlayerController(
+  playVideoFrom: PlayVideoFrom.vimeoPrivateVideos(
+    'YOUR_VIDEO_ID',
+    httpHeaders: headers,
+  ),
+)..initialise();
+```
 
-YouTube ✅ (already supported)
-Vimeo (planned)
-Twitch (planned)
-TikTok (planned)
-Dailymotion (planned)
+---
 
-# per essere sicuro che risponde ai cambiamenti del controller usa:
+### With Custom Config
+
+```dart
+controller = PodPlayerController(
+  playVideoFrom: PlayVideoFrom.youtube('https://youtu.be/xyz'),
+  podPlayerConfig: const PodPlayerConfig(
+    autoPlay: true,
+    isLooping: false,
+    videoQualityPriority: [720, 360],
+  ),
+)..initialise();
+```
+
+---
+
+### Add Thumbnail
+
+```dart
+PodVideoPlayer(
+  controller: controller,
+  videoThumbnail: DecorationImage(
+    image: NetworkImage('https://example.com/thumbnail.jpg'),
+    fit: BoxFit.cover,
+  ),
+)
+```
+
+---
+
+### Custom Labels
+
+```dart
+PodVideoPlayer(
+  controller: controller,
+  podPlayerLabels: const PodPlayerLabels(
+    play: "Play video",
+    pause: "Pause video",
+    mute: "Silence",
+    unMute: "Unmute",
+  ),
+)
+```
+
+---
+
+## 🎯 Advanced Integration with AnimatedBuilder
+
+To ensure full sync with internal state updates like `isFullScreen`, use:
+
 ```dart
 AnimatedBuilder(
-animation: Listenable.merge([
-controller,
-// ascolta isFullScreen o altri state update
-controller.sharedPlayerNotifier,
-// ascolta il cambiamento del widget video
-]),
-builder: (context, _) {
-final player = controller.sharedPlayerNotifier.value;
+  animation: Listenable.merge([
+    controller,
+    controller.sharedPlayerNotifier,
+  ]),
+  builder: (context, _) {
+    final player = controller.sharedPlayerNotifier.value;
+    final shouldRender = isFullScreenDisplay == controller.isFullScreen;
 
-        final shouldRender = isFullScreenDisplay == controller.isFullScreen;
-
-        return Center(
-          child: AspectRatio(
-            aspectRatio: aspectRatio,
-            child:
-                shouldRender
-                    ? (player ?? const SizedBox.shrink())
-                    : const SizedBox.shrink(),
-          ),
-        );
-      },
+    return Center(
+      child: AspectRatio(
+        aspectRatio: aspectRatio,
+        child: shouldRender ? (player ?? const SizedBox.shrink()) : const SizedBox.shrink(),
+      ),
     );
-```# universal_video_player
+  },
+);
+```
+
+---
+
+## 🧩 Example App
+
+Check out the full [`example/`](https://github.com/newtaDev/fl_video_player/tree/master/example) app in the repo.
+
+---
+
+## 🔮 Future Developments
+
+### 📃 Playlist Support
+
+* YouTube playlist playback
+* Custom playlist of video URLs
+
+### ⏩ Double Tap Seek
+
+* Skip forward/backward by configurable duration
+
+### 🧭 Header Bar
+
+* Title, channel name, and action buttons
+
+### 🖼 Picture-in-Picture Mode (PiP)
+
+* Continue video in floating overlay window
+
+### 📶 Video Quality Selection change during playing
+
+* Let users choose between 360p, 720p, 1080p etc.
+
+### ⏱ Playback Speed Control
+
+* Change speed to 0.5x, 1.5x, 2x, etc.
+
+### 🔁 Video Looping / Repeat
+
+* Loop single video or full playlist
+
+### ♿ Accessibility Enhancements
+
+* Screen readers, keyboard navigation, ARIA, captions, high contrast, etc.
+
+### ⬇️ Download / Offline Mode
+
+* Save videos for temporary offline playback
+
+### 📺 Chromecast & AirPlay Support
+
+* Stream video to external displays
+
+### 🔒 Parental Controls
+
+* Filter sensitive or age-restricted content
+
+### ⚙️ Settings Button
+
+* Quick access to all playback preferences
+
+---
+
+### 🔧 Upcoming Platform Support
+
+| Platform    | Status      |
+| ----------- | ----------- |
+| YouTube     | ✅ Supported |
+| Vimeo       | ✅ Supported  |
+| Twitch      | 🔜 Planned  |
+| TikTok      | 🔜 Planned  |
+| Dailymotion | 🔜 Planned  |
+
+---
+
+## 📄 License
+
+BSD 3-Clause License – see [LICENSE](LICENSE)

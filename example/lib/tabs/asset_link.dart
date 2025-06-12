@@ -7,32 +7,29 @@ class AssetLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Container(
-        color: Colors.white,
-        child: Center(
-          child: UniversalVideoPlayer(
-            callbacks: VideoPlayerCallbacks(),
-            options: VideoPlayerConfiguration(
-              videoSourceConfiguration: VideoSourceConfiguration(
-                videoDataSource: 'assets/sample.mp4',
-                videoSourceType: VideoSourceType.asset,
+      backgroundColor: Colors.blue,
+      body: Center(
+        child: UniversalVideoPlayer(
+          callbacks: VideoPlayerCallbacks(),
+          options: VideoPlayerConfiguration(
+            videoSourceConfiguration: VideoSourceConfiguration(
+              videoDataSource: 'assets/sample.mp4',
+              videoSourceType: VideoSourceType.asset,
+            ),
+            playerUIVisibilityOptions: PlayerUIVisibilityOptions(
+              useSafeAreaForBottomControls: true,
+            ),
+            globalPlaybackControlSettings: GlobalPlaybackControlSettings()
+                .copyWith(useGlobalPlaybackController: true),
+            customPlayerWidgets: CustomPlayerWidgets().copyWith(
+              loadingWidget: const Center(
+                child: CircularProgressIndicator(color: Colors.blueAccent),
               ),
-              playerUIVisibilityOptions: PlayerUIVisibilityOptions(
-                useSafeAreaForBottomControls: true,
-              ),
-              globalPlaybackControlSettings: GlobalPlaybackControlSettings()
-                  .copyWith(useGlobalPlaybackController: true),
-              customPlayerWidgets: CustomPlayerWidgets().copyWith(
-                loadingWidget: const Center(
-                  child: CircularProgressIndicator(color: Colors.blueAccent),
-                ),
-              ),
-              playerTheme: UniversalVideoPlayerThemeData().copyWith(
-                shapes: VideoPlayerShapeTheme().copyWith(borderRadius: 0),
-                colors: VideoPlayerColorScheme().copyWith(
-                  active: Colors.blueAccent,
-                ),
+            ),
+            playerTheme: UniversalVideoPlayerThemeData().copyWith(
+              shapes: VideoPlayerShapeTheme().copyWith(borderRadius: 0),
+              colors: VideoPlayerColorScheme().copyWith(
+                active: Colors.blueAccent,
               ),
             ),
           ),
