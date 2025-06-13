@@ -4,11 +4,21 @@ version: 0.0.1
 homepage: https://github.com/leonardmatasel/universal_video_player
 repository: https://github.com/leonardmatasel/universal_video_player
 issue_tracker: https://github.com/leonardmatasel/universal_video_player/issues
-
+documentation: https://github.com/leonardmatasel/universal_video_player
 
 environment:
-  sdk: ^3.7.2
-  flutter: ">=1.17.0"
+  sdk: ">=3.2.0 <4.0.0"
+  flutter: ">=3.22.0 <4.0.0"
+
+platforms:
+  android:
+  ios:
+  web:
+
+publish_to: none
+
+funding:
+  - https://github.com/sponsors/leonardmatasel
 
 dependencies:
   flutter:
@@ -39,7 +49,3 @@ topics:
   - vimeo
   - player
   - flutter
-
-# Optional pub points improvements
-funding:
-  - https://github.com/sponsors/leonardmatasel
