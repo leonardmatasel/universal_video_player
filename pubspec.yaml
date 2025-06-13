@@ -1,6 +1,6 @@
 name: universal_video_player
 description: "A Flutter widget for playing videos from YouTube, Vimeo, assets, and network sources — fully customizable and easy to integrate."
-version: 0.0.1
+version: 1.0.0
 homepage: https://github.com/leonardmatasel/universal_video_player
 repository: https://github.com/leonardmatasel/universal_video_player
 issue_tracker: https://github.com/leonardmatasel/universal_video_player/issues
