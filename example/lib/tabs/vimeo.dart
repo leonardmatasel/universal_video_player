@@ -33,10 +33,9 @@ class _VimeoState extends State<Vimeo> {
             },
           ),
           options: VideoPlayerConfiguration(
-            videoSourceConfiguration: VideoSourceConfiguration(
+            videoSourceConfiguration: VideoSourceConfiguration.vimeo(
               videoId: '1017406920',
-              videoSourceType: VideoSourceType.vimeo,
-            ),
+            ).copyWith(initialVolume: 0.5),
             playerUIVisibilityOptions: PlayerUIVisibilityOptions(
               useSafeAreaForBottomControls: true,
             ),

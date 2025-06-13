@@ -17,39 +17,47 @@ import 'package:universal_video_player/universal_video_player/models/video_sourc
 ///
 /// ---
 ///
-/// ### Examples:
+/// ### Factory Constructors:
 ///
 /// **Vimeo**
 /// ```dart
-/// VideoSourceConfiguration(
+/// VideoSourceConfiguration.vimeo(
 ///   videoId: "123456789",
-///   videoSourceType: VideoSourceType.vimeo,
 /// )
 /// ```
 ///
 /// **YouTube**
 /// ```dart
-/// VideoSourceConfiguration(
+/// VideoSourceConfiguration.youtube(
 ///   videoUrl: Uri.parse("https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
-///   videoSourceType: VideoSourceType.youtube,
 /// )
 /// ```
 ///
 /// **Network**
 /// ```dart
-/// VideoSourceConfiguration(
+/// VideoSourceConfiguration.network(
 ///   videoUrl: Uri.parse("https://example.com/video.mp4"),
-///   videoSourceType: VideoSourceType.network,
 /// )
 /// ```
 ///
 /// **Asset**
 /// ```dart
-/// VideoSourceConfiguration(
+/// VideoSourceConfiguration.asset(
 ///   videoDataSource: 'assets/videos/video.mp4',
-///   videoSourceType: VideoSourceType.asset,
 /// )
 /// ```
+///
+/// ---
+///
+/// ### Common playback options (modifiable with [copyWith]):
+///
+/// - [autoPlay]: Whether playback should start automatically (default: false).
+/// - [initialPosition]: The initial playback position (default: Duration.zero).
+/// - [initialVolume]: Initial volume level between 0.0 and 1.0 (default: 1.0).
+/// - [autoMuteOnStart]: Whether playback should start muted (default: false).
+/// - [preferredQualities]: Preferred video quality levels (default: [720]).
+/// - [allowSeeking]: Whether seeking is allowed (default: true).
+/// - [timeoutDuration]: Maximum wait time before considering playback failed (default: 30 seconds).
 @immutable
 class VideoSourceConfiguration {
   /// The video URL (for YouTube or network-based videos).
@@ -77,6 +85,19 @@ class VideoSourceConfiguration {
   final bool autoMuteOnStart;
 
   /// Preferred video quality levels in order of preference.
+  ///
+  /// Common values include:
+  /// - 144 (144p, molto bassa qualità)
+  /// - 240 (240p)
+  /// - 360 (360p)
+  /// - 480 (480p, qualità SD)
+  /// - 720 (720p, HD)
+  /// - 1080 (1080p, Full HD)
+  /// - 1440 (1440p, 2K)
+  /// - 2160 (2160p, 4K UHD)
+  ///
+  /// The player will try to select the best available quality from this list
+  /// according to the order provided.
   final List<int> preferredQualities;
 
   /// Whether the user is allowed to seek the video.
@@ -85,8 +106,8 @@ class VideoSourceConfiguration {
   /// Maximum wait time before considering playback failed.
   final Duration timeoutDuration;
 
-  /// Creates a new video source configuration with validation based on source type.
-  VideoSourceConfiguration({
+  /// Private constructor used by factory constructors and [copyWith].
+  const VideoSourceConfiguration._({
     this.videoUrl,
     this.videoId,
     this.videoDataSource,
@@ -98,59 +119,98 @@ class VideoSourceConfiguration {
     this.preferredQualities = const [720],
     this.allowSeeking = true,
     this.timeoutDuration = const Duration(seconds: 30),
-  }) : assert(
-         _validateSource(videoUrl, videoId, videoDataSource, videoSourceType),
-         'Invalid configuration:\n'
-         '- Vimeo → use videoId only\n'
-         '- YouTube / Network → use videoUrl only\n'
-         '- Asset / File → use videoDataSource only\n'
-         'Please provide only the appropriate field for the selected source type.',
-       );
+  });
 
-  /// Internal helper to validate that only the correct data source field is set.
-  static bool _validateSource(
-    Uri? url,
-    String? id,
-    String? dataSource,
-    VideoSourceType type,
-  ) {
-    switch (type) {
-      case VideoSourceType.vimeo:
-        return id != null && url == null && dataSource == null;
-      case VideoSourceType.youtube:
-      case VideoSourceType.network:
-        return url != null && id == null && dataSource == null;
-      case VideoSourceType.asset:
-        return dataSource != null && url == null && id == null;
-    }
+  /// Factory constructor for Vimeo videos.
+  ///
+  /// Example:
+  /// ```dart
+  /// VideoSourceConfiguration.vimeo(
+  ///   videoId: "123456789",
+  ///   preferredQualities: [720, 480], // Optional
+  /// )
+  /// ```
+  ///
+  /// - [videoId]: the numeric ID from a Vimeo URL (e.g., https://vimeo.com/123456789).
+  /// - [preferredQualities]: optional list of preferred video resolutions.
+  ///   Only used for Vimeo sources. Default is [480].
+  factory VideoSourceConfiguration.vimeo({
+    required String videoId,
+    List<int> preferredQualities = const [480],
+  }) {
+    return VideoSourceConfiguration._(
+      videoId: videoId,
+      videoSourceType: VideoSourceType.vimeo,
+      preferredQualities: preferredQualities,
+    );
   }
 
-  /// Returns a new instance of [VideoSourceConfiguration] with updated fields.
+  /// Factory constructor for YouTube videos.
   ///
-  /// All parameters are optional and default to current instance values if null.
+  /// Example:
+  /// ```dart
+  /// VideoSourceConfiguration.youtube(
+  ///   videoUrl: Uri.parse("https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
+  ///   preferredQualities: [1080, 720], // Optional
+  /// )
+  /// ```
+  ///
+  /// - [videoUrl]: the full URL of a YouTube video.
+  /// - [preferredQualities]: optional list of preferred video resolutions.
+  ///   Only used for YouTube sources. Default is [480].
+  factory VideoSourceConfiguration.youtube({
+    required Uri videoUrl,
+    List<int> preferredQualities = const [480],
+  }) {
+    return VideoSourceConfiguration._(
+      videoUrl: videoUrl,
+      videoSourceType: VideoSourceType.youtube,
+      preferredQualities: preferredQualities,
+    );
+  }
+
+  /// Factory constructor for network videos.
+  ///
+  /// Requires a [videoUrl].
+  factory VideoSourceConfiguration.network({required Uri videoUrl}) {
+    return VideoSourceConfiguration._(
+      videoUrl: videoUrl,
+      videoSourceType: VideoSourceType.network,
+    );
+  }
+
+  /// Factory constructor for asset or local file videos.
+  ///
+  /// Requires a [videoDataSource].
+  factory VideoSourceConfiguration.asset({required String videoDataSource}) {
+    return VideoSourceConfiguration._(
+      videoDataSource: videoDataSource,
+      videoSourceType: VideoSourceType.asset,
+    );
+  }
+
+  /// Returns a new instance of [VideoSourceConfiguration] with updated common playback fields.
+  ///
+  /// The parameters that distinguish the video source ([videoUrl], [videoId], [videoDataSource], [videoSourceType])
+  /// **cannot be modified** here to maintain consistency.
   VideoSourceConfiguration copyWith({
-    Uri? videoUrl,
-    String? videoId,
-    String? videoDataSource,
-    VideoSourceType? videoSourceType,
     bool? autoPlay,
     Duration? initialPosition,
     double? initialVolume,
     bool? autoMuteOnStart,
-    List<int>? preferredQualities,
     bool? allowSeeking,
     Duration? timeoutDuration,
   }) {
-    return VideoSourceConfiguration(
-      videoUrl: videoUrl ?? this.videoUrl,
-      videoId: videoId ?? this.videoId,
-      videoDataSource: videoDataSource ?? this.videoDataSource,
-      videoSourceType: videoSourceType ?? this.videoSourceType,
+    return VideoSourceConfiguration._(
+      videoUrl: videoUrl,
+      videoId: videoId,
+      videoDataSource: videoDataSource,
+      videoSourceType: videoSourceType,
       autoPlay: autoPlay ?? this.autoPlay,
       initialPosition: initialPosition ?? this.initialPosition,
       initialVolume: initialVolume ?? this.initialVolume,
       autoMuteOnStart: autoMuteOnStart ?? this.autoMuteOnStart,
-      preferredQualities: preferredQualities ?? this.preferredQualities,
+      preferredQualities: preferredQualities,
       allowSeeking: allowSeeking ?? this.allowSeeking,
       timeoutDuration: timeoutDuration ?? this.timeoutDuration,
     );

@@ -32,6 +32,7 @@ class VimeoVideoPlayer extends StatefulWidget {
     super.key,
     required this.videoId,
     required this.controller,
+    required this.preferredQualities,
     required this.onError,
   }) : assert(videoId.isNotEmpty, 'videoId cannot be empty!');
 
@@ -41,6 +42,8 @@ class VimeoVideoPlayer extends StatefulWidget {
   final String videoId;
 
   final VoidCallback onError;
+
+  final List<int> preferredQualities;
 
   /// The [VimeoPlaybackController] that manages interaction with the embedded Vimeo player.
   ///
@@ -153,6 +156,7 @@ class _VimeoVideoPlayerState extends State<VimeoVideoPlayer> {
   String _buildIframeUrl() {
     return 'https://player.vimeo.com/video/${widget.videoId}?'
         'autoplay=${false}'
+        '&max_quality=${_resolutionToLabel(widget.preferredQualities.first)}'
         '&loop=${true}'
         '&portrait=${false}'
         '&muted=${false}'
@@ -160,6 +164,16 @@ class _VimeoVideoPlayerState extends State<VimeoVideoPlayer> {
         '&byline=${false}'
         '&controls=${false}'
         '&dnt=${false}';
+  }
+
+  String _resolutionToLabel(int resolution) {
+    if (resolution >= 2000 && resolution < 3000) {
+      return '2k';
+    } else if (resolution >= 3000) {
+      return '4k';
+    } else {
+      return '${resolution}p';
+    }
   }
 
   /// Handles playback-related events received from the embedded Vimeo player.

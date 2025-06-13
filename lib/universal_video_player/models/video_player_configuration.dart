@@ -4,7 +4,6 @@ import 'package:universal_video_player/universal_video_player/models/custom_play
 import 'package:universal_video_player/universal_video_player/models/global_playback_control_settings.dart';
 import 'package:universal_video_player/universal_video_player/models/video_source_configuration.dart';
 import 'package:universal_video_player/universal_video_player/models/player_ui_visibility_options.dart';
-import 'package:universal_video_player/universal_video_player/models/video_source_type.dart';
 import 'package:universal_video_player/universal_video_player/theme/universal_video_player_theme.dart';
 
 /// Configuration options for customizing the appearance and behavior of a video player.
@@ -119,15 +118,4 @@ class VideoPlayerConfiguration {
           enableBackgroundOverlayClip ?? this.enableBackgroundOverlayClip,
     );
   }
-
-  /// A simplified constructor for quickly creating configuration with minimal options.
-  VideoPlayerConfiguration.simple({
-    required Uri videoUrl,
-    required VideoSourceType videoSourceType,
-  }) : this(
-         videoSourceConfiguration: VideoSourceConfiguration(
-           videoUrl: videoUrl,
-           videoSourceType: videoSourceType,
-         ),
-       );
 }

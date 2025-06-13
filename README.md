@@ -22,7 +22,8 @@
 
 ## Introduction
 
-**universal_video_player** is a Flutter video player built on top of Flutter’s official `video_player` plugin. It supports YouTube (via `youtube_explode_dart`), network and asset videos.
+**universal\_video\_player** is a Flutter video player built on top of Flutter’s official `video_player` plugin. It supports YouTube (via `youtube_explode_dart`), Vimeo videos (using `flutter_inappwebview`), as well as network and asset videos. A single unified controller is provided to manage playback across all supported video types seamlessly.
+
 
 🎨 Highly customizable — tweak UI, show/hide controls, and easily integrate your own widgets.  
 🎮 The controller gives full control over video state and callbacks for smooth video management on mobile and web.
@@ -124,44 +125,67 @@ To allow video streaming over HTTP (especially for development or non-HTTPS sour
 
 <br>
 
+
 ## 📦 Usage Examples
 
-### Basic Network Video
+### Network
 
 ```dart
-controller = PodPlayerController(
-  playVideoFrom: PlayVideoFrom.network('https://example.com/video.mp4'),
-)..initialise();
+VideoSourceConfiguration.network(
+  videoUrl: Uri.parse('https://example.com/video.mp4'),
+);
 ```
 
-### YouTube Video
+### YouTube
 
 ```dart
-controller = PodPlayerController(
-  playVideoFrom: PlayVideoFrom.youtube('https://youtu.be/A3ltMaM6noM'),
-)..initialise();
+VideoSourceConfiguration.youtube(
+  videoUrl: Uri.parse('https://youtu.be/xyz'),
+  preferredQualities: [720, 480],
+);
 ```
 
-### Vimeo Video
+### Vimeo
 
 ```dart
-controller = PodPlayerController(
-  playVideoFrom: PlayVideoFrom.vimeo('518228118'),
-)..initialise();
+VideoSourceConfiguration.vimeo(
+  videoId: '123456789',
+  preferredQualities: [1080],
+);
 ```
 
-### With Custom Config
+### Asset
 
 ```dart
-controller = PodPlayerController(
-  playVideoFrom: PlayVideoFrom.youtube('https://youtu.be/xyz'),
-  podPlayerConfig: const PodPlayerConfig(
-    autoPlay: true,
-    isLooping: false,
-    videoQualityPriority: [720, 360],
+VideoSourceConfiguration.asset(
+  videoDataSource: 'assets/video.mp4'),
+);
+```
+
+
+
+## 🧩 Basic Setup with Controller
+
+```dart
+late UniversalPlaybackController controller;
+
+UniversalVideoPlayer(
+  callbacks: VideoPlayerCallbacks(
+    onControllerCreated: (c) => controller = c,
   ),
-)..initialise();
+  options: VideoPlayerConfiguration(
+    videoSourceConfiguration: VideoSourceConfiguration.youtube(
+      videoUrl: Uri.parse('https://youtube.com/watch?v=xyz'),
+    ),
+  ),
+);
 ```
+<br>
+
+## 📱 Example App
+
+Check out the full [`example/`](https://github.com/leonardmatasel/universal_video_player/tree/main/example) app in the repo.
+
 
 <br>
 
@@ -191,11 +215,7 @@ AnimatedBuilder(
 
 <br>
 
-## 🧩 Example App
 
-Check out the full [`example/`](https://github.com/newtaDev/fl_video_player/tree/master/example) app in the repo.
-
-<br>
 
 ## 🔮 Future Developments
 

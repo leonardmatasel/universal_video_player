@@ -12,11 +12,10 @@ class YTLive extends StatelessWidget {
         child: UniversalVideoPlayer(
           callbacks: VideoPlayerCallbacks(),
           options: VideoPlayerConfiguration(
-            videoSourceConfiguration: VideoSourceConfiguration(
+            videoSourceConfiguration: VideoSourceConfiguration.youtube(
               videoUrl: Uri.parse(
                 'https://www.youtube.com/watch?v=Cp4RRAEgpeU',
               ),
-              videoSourceType: VideoSourceType.youtube,
             ),
             customPlayerWidgets: CustomPlayerWidgets().copyWith(
               loadingWidget: CircularProgressIndicator(color: Colors.white),

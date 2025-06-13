@@ -12,9 +12,8 @@ class AssetLink extends StatelessWidget {
         child: UniversalVideoPlayer(
           callbacks: VideoPlayerCallbacks(),
           options: VideoPlayerConfiguration(
-            videoSourceConfiguration: VideoSourceConfiguration(
+            videoSourceConfiguration: VideoSourceConfiguration.asset(
               videoDataSource: 'assets/sample.mp4',
-              videoSourceType: VideoSourceType.asset,
             ),
             playerUIVisibilityOptions: PlayerUIVisibilityOptions(
               useSafeAreaForBottomControls: true,

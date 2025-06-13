@@ -12,9 +12,8 @@ class NetworkLink extends StatelessWidget {
         child: UniversalVideoPlayer(
           callbacks: VideoPlayerCallbacks(),
           options: VideoPlayerConfiguration(
-            videoSourceConfiguration: VideoSourceConfiguration(
+            videoSourceConfiguration: VideoSourceConfiguration.network(
               videoUrl: Uri.parse('https://www.w3schools.com/tags/mov_bbb.mp4'),
-              videoSourceType: VideoSourceType.network,
             ),
             playerUIVisibilityOptions: PlayerUIVisibilityOptions(
               useSafeAreaForBottomControls: true,
