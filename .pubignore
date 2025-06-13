@@ -1,2 +1,6 @@
 **/doc/api/
 example/
+test/
+devtools_options.yaml
+build/
+analysis_options.yaml
